@@ -4,7 +4,8 @@ int main() {
     //initialize the frontend
     Font* fonts = initFrontend();
     //get the music
-    struct directory* dir = getMusic("Mp3", 0);
+    struct directory* OGDir = getMusic("Mp3", 0);
+    struct directory* dir = OGDir;
     //back button stuff
     struct list* backList = list_create();
     int goBack = 0;
@@ -25,7 +26,8 @@ int main() {
     }
 
     //prevent memory leaks
+    list_free(backList);
     freeFonts(fonts);
-    freeDirectory(dir);
+    freeDirectory(OGDir);
     return 0;
 }
