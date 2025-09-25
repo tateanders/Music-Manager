@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.15)
-project(my_clay_app C)
+project(lib C)
 
 set(CMAKE_C_STANDARD 99)
 
@@ -25,6 +25,8 @@ set(CLAY_SOURCES
     src/main.c
     clay/clay.h
     frontend/front.c
+    frontend/components.c
+    frontend/globals.c
     backend/data.c
     backend/metadata.c
     backend/ID3v2dot3/editID3v2dot3.c
@@ -38,10 +40,10 @@ set(CLAY_SOURCES
 )
 
 # Create the executable
-add_executable(my_clay_app ${CLAY_SOURCES})
+add_executable(lib ${CLAY_SOURCES})
 
 # Link Raylib and macOS frameworks
-target_link_libraries(my_clay_app
+target_link_libraries(lib
     raylib
     "-framework OpenGL"
     "-framework Cocoa"
@@ -51,7 +53,7 @@ target_link_libraries(my_clay_app
 )
 
 add_custom_command(
-    TARGET my_clay_app POST_BUILD
+    TARGET lib POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory
     ${CMAKE_CURRENT_SOURCE_DIR}/resources
     ${CMAKE_CURRENT_BINARY_DIR}/resources
