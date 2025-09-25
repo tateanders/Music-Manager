@@ -131,8 +131,7 @@ int windowShouldUpdate() {
     Main function
 -------------------------------------------------------------------------------------------------*/
 
-struct directory* mainFrontend(Font* fonts, struct directory* dir){
-    int goBack = 0;
+struct directory* mainFrontend(Font* fonts, struct directory* dir, int goBack){
     //run once per frame
     //make the window resizeable
     Clay_SetLayoutDimensions((Clay_Dimensions){
@@ -217,7 +216,6 @@ struct directory* mainFrontend(Font* fonts, struct directory* dir){
             Clay_ElementId btnId = Clay__HashString(dirName, i, 0);
             if (Clay_PointerOver(btnId)) {
                 dir = tempDir;
-                printf("button pressed\n");
                 break;
             }
         }
@@ -230,5 +228,14 @@ struct directory* mainFrontend(Font* fonts, struct directory* dir){
     ClearBackground(BLACK);
     Clay_Raylib_Render(renderCommands, fonts);
     EndDrawing();
+
+    //check if the back button was pressed
+    if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)){
+        Clay_ElementId backButtonId = Clay__HashString(CLAY_STRING("Back Button Container"), 0, 0);
+        if (Clay_PointerOver(backButtonId)) {
+            return NULL;
+        }
+    };
+
     return dir;
 }

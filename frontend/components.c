@@ -14,8 +14,10 @@ Clay_String buildClayString(const char* string) { /*static inline*/
 -------------------------------------------------------------------------------------------------*/
 
 void renderBackButton () {
+
+    Clay_ElementId backButtonId = Clay__HashString(CLAY_STRING("Back Button Container"), 0, 0);
     CLAY({
-        .id = CLAY_ID("Back Button Container"),
+        .id = backButtonId,
         .layout = {
             .childAlignment = { CLAY_ALIGN_X_CENTER, CLAY_ALIGN_Y_CENTER },
             .sizing = { CLAY_SIZING_FIXED(100), CLAY_SIZING_GROW(0) },
