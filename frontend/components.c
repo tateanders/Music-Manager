@@ -8,6 +8,48 @@ static inline Clay_String buildClayString(const char* string) {
     return clayString;
 }
 
+/*-------------------------------------------------------------------------------------------------
+    render header bar
+-------------------------------------------------------------------------------------------------*/
+
+void renderHeader() {
+    // HEADER
+    CLAY({
+        .id = CLAY_ID("Header"),
+        .layout = {
+            .sizing = { CLAY_SIZING_GROW(0), CLAY_SIZING_FIXED(100) },  // full width, fixed height
+            // .childAlignment = { CLAY_ALIGN_X_CENTER, CLAY_ALIGN_Y_CENTER }
+            //.padding = CLAY_PADDING_ALL(12)
+            .layoutDirection = CLAY_LEFT_TO_RIGHT,
+            // .sizing = { CLAY_SIZING_GROW(0), CLAY_SIZING_GROW(0) },
+            .childGap = 10
+        },
+        .backgroundColor = GARNET,  // dark grey
+    }){
+        // if (goBack) {
+
+        // }
+        CLAY({
+            .id = CLAY_ID("Back Button Container"),
+            .layout = {
+                .sizing = { CLAY_SIZING_GROW(0), CLAY_SIZING_GROW(0) },
+            },
+            .backgroundColor = OLDGOLD,
+        }){
+
+        }
+        CLAY_TEXT(CLAY_STRING("Music Library"), CLAY_TEXT_CONFIG({
+            .fontId = GOTHIC,
+            .fontSize = 65,
+            .textColor = BLUEGRAY
+        }));
+    }
+}
+
+/*-------------------------------------------------------------------------------------------------
+    render song and directory buttons
+-------------------------------------------------------------------------------------------------*/
+
 void renderSongButton(struct song* song, int pos) {
     // Create unique ID for each button
     Clay_String text = buildClayString(song->songName);
@@ -60,6 +102,10 @@ void renderDirButton(struct directory* dir, int pos) {
     }
 }
 
+/*-------------------------------------------------------------------------------------------------
+    render the full directory
+-------------------------------------------------------------------------------------------------*/
+
 void renderDirectory(struct directory* dir) {
     int i;
     int pos = 0;
@@ -80,39 +126,5 @@ void renderDirectory(struct directory* dir) {
             renderSongButton(song,pos);
             pos++;
         }
-    }
-}
-
-void renderHeader() {
-    // HEADER
-    CLAY({
-        .id = CLAY_ID("Header"),
-        .layout = {
-            .sizing = { CLAY_SIZING_GROW(0), CLAY_SIZING_FIXED(100) },  // full width, fixed height
-            // .childAlignment = { CLAY_ALIGN_X_CENTER, CLAY_ALIGN_Y_CENTER }
-            //.padding = CLAY_PADDING_ALL(12)
-            .layoutDirection = CLAY_LEFT_TO_RIGHT,
-            // .sizing = { CLAY_SIZING_GROW(0), CLAY_SIZING_GROW(0) },
-            .childGap = 10
-        },
-        .backgroundColor = GARNET,  // dark grey
-    }){
-        // if (goBack) {
-
-        // }
-        CLAY({
-            .id = CLAY_ID("Back Button Container"),
-            .layout = {
-                .sizing = { CLAY_SIZING_GROW(0), CLAY_SIZING_GROW(0) },
-            },
-            .backgroundColor = OLDGOLD,
-        }){
-
-        }
-        CLAY_TEXT(CLAY_STRING("Music Library"), CLAY_TEXT_CONFIG({
-            .fontId = GOTHIC,
-            .fontSize = 65,
-            .textColor = BLUEGRAY
-        }));
     }
 }

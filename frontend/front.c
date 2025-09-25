@@ -15,6 +15,14 @@ void HandleClayErrors(Clay_ErrorData errorData) {
     }*/
 }
 
+void freeFonts(Font* fonts) {
+    UnloadFont(fonts[GOTHIC]);
+    UnloadFont(fonts[JAKARTA]);
+    UnloadFont(fonts[PLAYFAIR]);
+    UnloadFont(fonts[OSWALD]);
+    free(fonts);
+}
+
 /*-------------------------------------------------------------------------------------------------
     Button interaction
 -------------------------------------------------------------------------------------------------*/

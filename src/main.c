@@ -13,8 +13,9 @@ int main() {
         // }
         mainFrontend(fonts, music);
     }
+
     //prevent memory leaks
-    free(fonts);
+    freeFonts(fonts);
     freeDirectory(music);
     return 0;
 }
