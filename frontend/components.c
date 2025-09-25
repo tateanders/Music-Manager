@@ -1,6 +1,7 @@
 #include "components.h"
+#include <inttypes.h>
 
-static inline Clay_String buildClayString(const char* string) {
+Clay_String buildClayString(const char* string) { /*static inline*/
     Clay_String clayString;
     clayString.isStaticallyAllocated = false;
     clayString.length = (int32_t)strlen(string);
@@ -12,31 +13,41 @@ static inline Clay_String buildClayString(const char* string) {
     render header bar
 -------------------------------------------------------------------------------------------------*/
 
-void renderHeader() {
+void renderBackButton () {
+    CLAY({
+        .id = CLAY_ID("Back Button Container"),
+        .layout = {
+            .childAlignment = { CLAY_ALIGN_X_CENTER, CLAY_ALIGN_Y_CENTER },
+            .sizing = { CLAY_SIZING_FIXED(100), CLAY_SIZING_GROW(0) },
+            .padding = { .left = 10 }
+        },
+        .floating = { .attachTo = CLAY_ATTACH_TO_PARENT },
+        .backgroundColor = GARNET,
+    }){
+        CLAY_TEXT(CLAY_STRING("Back"), CLAY_TEXT_CONFIG({
+            .fontId = GOTHIC,
+            .fontSize = 40,
+            .textColor = OLDGOLD
+        }));
+    }
+}
+
+void renderHeader(int goBack) {
     // HEADER
     CLAY({
         .id = CLAY_ID("Header"),
         .layout = {
             .sizing = { CLAY_SIZING_GROW(0), CLAY_SIZING_FIXED(100) },  // full width, fixed height
-            // .childAlignment = { CLAY_ALIGN_X_CENTER, CLAY_ALIGN_Y_CENTER }
+            .childAlignment = { CLAY_ALIGN_X_CENTER, CLAY_ALIGN_Y_CENTER },
             //.padding = CLAY_PADDING_ALL(12)
             .layoutDirection = CLAY_LEFT_TO_RIGHT,
             // .sizing = { CLAY_SIZING_GROW(0), CLAY_SIZING_GROW(0) },
-            .childGap = 10
+            // .childGap = 10
         },
         .backgroundColor = GARNET,  // dark grey
     }){
-        // if (goBack) {
-
-        // }
-        CLAY({
-            .id = CLAY_ID("Back Button Container"),
-            .layout = {
-                .sizing = { CLAY_SIZING_GROW(0), CLAY_SIZING_GROW(0) },
-            },
-            .backgroundColor = OLDGOLD,
-        }){
-
+        if (goBack) {
+            renderBackButton();
         }
         CLAY_TEXT(CLAY_STRING("Music Library"), CLAY_TEXT_CONFIG({
             .fontId = GOTHIC,

@@ -14,7 +14,7 @@
 -------------------------------------------------------------------------------------------------*/
 
 void freeFonts(Font* fonts);
-int mainFrontend(Font*, struct directory*);
+struct directory* mainFrontend(Font*, struct directory*);
 int windowShouldUpdate();
 Font* initFrontend();
 

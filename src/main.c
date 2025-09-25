@@ -7,11 +7,8 @@ int main() {
     struct directory* music = getMusic("Mp3", 0);
     mainFrontend(fonts, music);
     while (!WindowShouldClose()) {
-        //run once per frame
-        // if (windowShouldUpdate()){
-        //     mainFrontend(fonts, music);
-        // }
-        mainFrontend(fonts, music);
+        struct directory* newMusic = mainFrontend(fonts, music);
+        
     }
 
     //prevent memory leaks

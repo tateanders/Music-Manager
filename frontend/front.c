@@ -2,6 +2,7 @@
 #include "front.h"
 #include "clay_renderer_raylib.c"
 #include "components.h"
+#include <inttypes.h>
 
 /*-------------------------------------------------------------------------------------------------
     Error handler
@@ -130,7 +131,7 @@ int windowShouldUpdate() {
     Main function
 -------------------------------------------------------------------------------------------------*/
 
-int mainFrontend(Font* fonts, struct directory* dir){
+struct directory* mainFrontend(Font* fonts, struct directory* dir){
     int goBack = 0;
     //run once per frame
     //make the window resizeable
@@ -165,7 +166,7 @@ int mainFrontend(Font* fonts, struct directory* dir){
         },
         .backgroundColor = DARKMODE
     }){
-        renderHeader();
+        renderHeader(goBack);
         // MAIN ROW: contains sidebar and main content
         CLAY({
             .id = CLAY_ID("MainRow"),
@@ -208,18 +209,19 @@ int mainFrontend(Font* fonts, struct directory* dir){
         }
     }
 
-    // if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)){
-    //     // Check each user button
-    //     for (int i = 0; i < user_arr.NumUsers; i++) {
-    //         User user = *user_arr.Users[i];
-    //         Clay_ElementId btnId = Clay__HashString(user.UserName, i, 0);
-    //         if (Clay_PointerOver(btnId)) {
-    //             SelectedUserIndex = i;
-    //             //printf("Selected user %d\n", i);
-    //             break;
-    //         }
-    //     }
-    // };
+    if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)){
+        // Check each user button
+        for (int i = 0; i < list_getNumElements(dir->directories); i++) {
+            struct directory* tempDir = list_getElement(dir->directories, i);
+            Clay_String dirName = buildClayString(tempDir->dirName);
+            Clay_ElementId btnId = Clay__HashString(dirName, i, 0);
+            if (Clay_PointerOver(btnId)) {
+                dir = tempDir;
+                printf("button pressed\n");
+                break;
+            }
+        }
+    };
 
     Clay_RenderCommandArray renderCommands = Clay_EndLayout();
 
@@ -228,5 +230,5 @@ int mainFrontend(Font* fonts, struct directory* dir){
     ClearBackground(BLACK);
     Clay_Raylib_Render(renderCommands, fonts);
     EndDrawing();
-    return 0;
+    return dir;
 }
