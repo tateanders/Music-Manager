@@ -1,6 +1,10 @@
 #include "components.h"
 #include <inttypes.h>
 
+/*-------------------------------------------------------------------------------------------------
+    helper functions
+-------------------------------------------------------------------------------------------------*/
+
 Clay_String buildClayString(const char* string) { /*static inline*/
     Clay_String clayString;
     clayString.isStaticallyAllocated = false;

@@ -53,6 +53,25 @@ void freeDirectory(struct directory* directory){
     return;
 }
 
+char* truncateString(const char* input) {
+    if (!input) return NULL;
+
+    size_t len = strlen(input);
+    if (len <= 38) {
+        char* copy = malloc(len + 1);
+        if (!copy) return NULL;
+        memcpy(copy, input, len + 1); // include null terminator
+        return copy;
+    } else {
+        // 17 chars + "..." (3 chars) + '\0' = 21 bytes
+        char* truncated = malloc(35 + 3 + 1);
+        if (!truncated) return NULL;
+        memcpy(truncated, input, 35);       // copy first 17 bytes
+        memcpy(truncated + 35, "...", 4);   // copy '.' '.' '.' '\0'
+        return truncated;
+    }
+}
+
 /*-------------------------------------------------------------------------------------------------
     Helper functions
 -------------------------------------------------------------------------------------------------*/
@@ -100,6 +119,11 @@ struct song* createSong(struct dirent* entry, char* dirPath, int updateMD){
     len = (strlen(song->fileName) - strlen(song->songName));
     song->fileType = (char*) calloc(len, sizeof(char));
     strcpy(song->fileType, dot + 1);
+    //truncate the name of the song
+    char* newName = truncateString(song->songName);
+    free(song->songName);
+    song->songName = newName;
+
     //return
     if (updateMD == 1) {
         addComment(entry, dirPath);

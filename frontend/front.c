@@ -16,6 +16,10 @@ void HandleClayErrors(Clay_ErrorData errorData) {
     }*/
 }
 
+/*-------------------------------------------------------------------------------------------------
+    free
+-------------------------------------------------------------------------------------------------*/
+
 void freeFonts(Font* fonts) {
     UnloadFont(fonts[GOTHIC]);
     UnloadFont(fonts[JAKARTA]);
@@ -40,39 +44,6 @@ void freeFonts(Font* fonts) {
 //         }
 //     }
 // };
-
-/*-------------------------------------------------------------------------------------------------
-    Render buttons
--------------------------------------------------------------------------------------------------*/
-
-// void RenderSidebarButton(Clay_String text, int index) {
-//     // Create unique ID for each button
-//     Clay_ElementId personId = Clay__HashString(text, index, 0);
-    
-//     CLAY({
-//         .id = personId,
-//         .layout = { 
-//             .sizing = { 
-//                 .width = CLAY_SIZING_GROW(0),
-//                 .height = CLAY_SIZING_FIXED(60) // Explicit height
-//             },
-//             .padding = CLAY_PADDING_ALL(16),
-//             .childAlignment = { CLAY_ALIGN_X_CENTER, CLAY_ALIGN_Y_CENTER } 
-//         },
-//         .backgroundColor = (SelectedUserIndex == index) ? BLUEGRAY : GARNET,
-//         .cornerRadius = 8,
-//     }) {
-//         CLAY_TEXT(text, CLAY_TEXT_CONFIG({ 
-//             .fontId = OSWALD, 
-//             .fontSize = 40, 
-//             .textColor = OLDGOLD
-//         }));
-//     }
-// };
-
-/*-------------------------------------------------------------------------------------------------
-    Render main page and sidebar
--------------------------------------------------------------------------------------------------*/
 
 /*-------------------------------------------------------------------------------------------------
     Main Frontend
@@ -198,7 +169,7 @@ struct directory* mainFrontend(Font* fonts, struct directory* dir, int goBack){
                     .layoutDirection = CLAY_TOP_TO_BOTTOM,
                     .sizing = { CLAY_SIZING_GROW(1), CLAY_SIZING_GROW(0) },
                     .padding = CLAY_PADDING_ALL(10),
-                    .childGap = 10
+                    .childGap = 10,
                 },
                 .backgroundColor = BLUEGRAY  // even darker bg
             }){
