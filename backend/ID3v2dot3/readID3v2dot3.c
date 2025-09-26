@@ -27,39 +27,6 @@ const char* ID3v2dot3ValidTags[] = {
 const size_t ID3v23ValidFramesCount = sizeof(ID3v2dot3ValidTags) / sizeof(ID3v2dot3ValidTags[0]);
 
 /*-------------------------------------------------------------------------------------------------
-    Print Functions
--------------------------------------------------------------------------------------------------*/
-
-void printFrame(struct ID3v2dot3Frame* frame) {
-    printf("FRAME:\n");
-    printf("TAG: %.4s ", frame->id);
-    printf("Size: %i | Data: %.*s\n", frame->size, frame->size - 1, frame->data + 1);
-}
-
-void printExHeader(struct ID3v2dot3ExtendedHeader* exHeader) {
-    printf("EXTENDED HEADER:\n");
-    printf("Size: %i | Padding: %i | CRC flag: %i\n", exHeader->size, exHeader->paddingSize, exHeader->crcFlag);
-}
-
-void printHeader(struct ID3v2dot3Header* header) {
-    printf("HEADER:\n");
-    printf("Version: %i | Size: %i | uFlag: %i | eFlag: %i | xFlag: %i\n", header->version, header->size, header->uFlag, header->eFlag, header->xFlag);
-}
-
-void printMetaData(struct ID3v2dot3MetaData* data) {
-    printHeader(data->header);
-    if (data->header->eFlag) {
-        printExHeader(data->exHeader);
-    }
-    int i;
-    int numFrames = dynarray_size(data->frames);
-    for (i = 0; i < numFrames; i++) {
-        printFrame(dynarray_get(data->frames, i));
-    }
-    printf("Padding: %zi\n\n", data->padding);
-}
-
-/*-------------------------------------------------------------------------------------------------
     Helper functions
 -------------------------------------------------------------------------------------------------*/
 
@@ -252,9 +219,6 @@ struct ID3v2dot3MetaData* getMetaDataV2dot3(FILE* file) {
         ws = 0;
     }
     data->padding = (ssize_t)ws;
-
-    // printf("Data after reading\n");
-    // printMetaData(data);
 
     return data;
 }

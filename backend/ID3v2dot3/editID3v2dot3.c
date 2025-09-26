@@ -246,8 +246,6 @@ int addCommentV2dot3(FILE* file, char* comment, struct ID3v2dot3MetaData* data){
     if (data->padding < 0) {
         addpadding(file, data);
     }
-    printf("Data before writing\n");
-    printMetaData(data);
     updateFile(file, data);
     return 1;
 }

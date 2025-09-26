@@ -199,32 +199,11 @@ int insertCommentFramev2dot4(char* comment, struct dynarray* arr) {
     return frameSize;
 }
 
-// int checkDupCommentV2dot4(struct dynarray* arr, char* comment) {
-//     int i;
-//     for (i = 0; i < dynarray_size(arr); i++) {
-//         struct ID3v2dot4Frame* frame = dynarray_get(arr, i);
-
-//         if (memcmp(frame->id, "COMM", 4) != 0) {
-//             continue;
-//         }
-
-//         char* existingComment = (char*)(frame->data);
-//         if (strstr(existingComment, comment - 1) != 0) {
-//             return 1;
-//         }
-//     }
-//     return 0;
-// }
-
 /*-------------------------------------------------------------------------------------------------
     Main function
 -------------------------------------------------------------------------------------------------*/
 
 int addCommentV2dot4(FILE* file, char* comment, struct ID3v2dot4MetaData* data){
-    // if (checkDupCommentV2dot4(data->frames, comment)) {
-    //     printf("skipping comment\n");
-    //     return 1;
-    // }
     //add the comment
     int bytesRemoved = removeCommentIfExistsv2dot4(data->frames);
     int bytesAdded = insertCommentFramev2dot4(comment, data->frames);
@@ -233,8 +212,6 @@ int addCommentV2dot4(FILE* file, char* comment, struct ID3v2dot4MetaData* data){
     if (data->padding < 0) {
         addpaddingv2dot4(file, data);
     }
-    printf("Data before writing\n");
-    printMetaData4(data);
     updateFilev2dot4(file, data);
     return 1;
 }

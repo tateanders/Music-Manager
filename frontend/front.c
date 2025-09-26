@@ -102,7 +102,7 @@ int windowShouldUpdate() {
     Main function
 -------------------------------------------------------------------------------------------------*/
 
-struct directory* mainFrontend(Font* fonts, struct directory* dir, int goBack){
+struct directory* mainFrontend(Font* fonts, struct directory* dir, int goBack, int* tagsAdded){
     //run once per frame
     //make the window resizeable
     Clay_SetLayoutDimensions((Clay_Dimensions){
@@ -159,7 +159,7 @@ struct directory* mainFrontend(Font* fonts, struct directory* dir, int goBack){
                 },
                 .backgroundColor = OLDGOLD
             }){
-                //RenderSidebarButton(CLAY_STRING("Add Metadata"), 0);
+                renderSidebarButton(*tagsAdded);
             }
     
             // MAIN CONTENT (empty for now)
@@ -200,13 +200,17 @@ struct directory* mainFrontend(Font* fonts, struct directory* dir, int goBack){
     Clay_Raylib_Render(renderCommands, fonts);
     EndDrawing();
 
-    //check if the back button was pressed
+    //check if the back button or add tags was pressed
     if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)){
-        Clay_ElementId backButtonId = Clay__HashString(CLAY_STRING("Back Button Container"), 0, 0);
-        if (Clay_PointerOver(backButtonId)) {
+        Clay_ElementId bId = Clay__HashString(CLAY_STRING("Back Button Container"), 0, 0);
+        if (Clay_PointerOver(bId)) {
             return NULL;
         }
-    };
+        bId = Clay__HashString(CLAY_STRING("Add Tags"), 0, 0);
+        if (Clay_PointerOver(bId)) {
+            *tagsAdded = 1200;
+        }
+    }
 
     return dir;
 }

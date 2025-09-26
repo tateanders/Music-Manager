@@ -259,14 +259,14 @@ struct directory* getMusic(char* musicDirName, int updateMD) {
     DIR* musicDir = openMusicDir(musicDirName); 
 
     //get contents of music directory
+    if (updateMD) {
+        printf("Updating Metadata\n");
+    }
     struct directory* music = fillDirectory(musicDir, musicDirName, NULL, updateMD);
+    if (updateMD) {
+        printf("Metadata Updated\n");
+    }
     closedir(musicDir);
 
-    //print the contents
-    // int numSpaces = 0;
-    // printDirectory(music, numSpaces);
-    
-    //exit the program
-    // freeDirectory(music);
     return music;
 }

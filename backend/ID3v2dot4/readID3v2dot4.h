@@ -30,6 +30,5 @@ struct ID3v2dot4MetaData {
 
 void freeDataV2dot4(struct ID3v2dot4MetaData* data);
 struct ID3v2dot4MetaData* getMetaDataV2dot4(FILE* file);
-void printMetaData4(struct ID3v2dot4MetaData* data);
 
 #endif

@@ -44,14 +44,12 @@ int addComment(struct dirent* entry, char* comment){
 
     //add the comment
     if (ID3v == 23) {
-        printf("updating file\n");
         struct ID3v2dot3MetaData* data = getMetaDataV2dot3(file);
         if (data) {
             addCommentV2dot3(file, comment, data);
             freeDataV2dot3(data);
         }
     } else if (ID3v == 24) {
-        printf("updating file\n");
         struct ID3v2dot4MetaData* data = getMetaDataV2dot4(file);
         if (data) {
             addCommentV2dot4(file, comment, data);

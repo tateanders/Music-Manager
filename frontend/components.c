@@ -17,8 +17,7 @@ Clay_String buildClayString(const char* string) { /*static inline*/
     render header bar
 -------------------------------------------------------------------------------------------------*/
 
-void renderBackButton () {
-
+void renderBackButton() {
     Clay_ElementId backButtonId = Clay__HashString(CLAY_STRING("Back Button Container"), 0, 0);
     CLAY({
         .id = backButtonId,
@@ -143,5 +142,55 @@ void renderDirectory(struct directory* dir) {
             renderSongButton(song,pos);
             pos++;
         }
+    }
+}
+
+/*-------------------------------------------------------------------------------------------------
+    render the sideBar button
+-------------------------------------------------------------------------------------------------*/
+
+void renderGreenButton() {
+    Clay_ElementId bId = Clay__HashString(CLAY_STRING("Tags Added"), 0, 0);
+    CLAY({
+        .id = bId,
+        .layout = {
+            .childAlignment = { CLAY_ALIGN_X_CENTER, CLAY_ALIGN_Y_CENTER },
+            .sizing = { CLAY_SIZING_GROW(0), CLAY_SIZING_FIXED(75) },
+        },
+        .backgroundColor = GREENS,
+        .cornerRadius = 8,
+    }){
+        CLAY_TEXT(CLAY_STRING("Tags Added"), CLAY_TEXT_CONFIG({
+            .fontId = GOTHIC,
+            .fontSize = 32,
+            .textColor = GARNET
+        }));
+    }
+}
+
+void renderTagsButton() {
+    Clay_ElementId bId = Clay__HashString(CLAY_STRING("Add Tags"), 0, 0);
+    CLAY({
+        .id = bId,
+        .layout = {
+            .childAlignment = { CLAY_ALIGN_X_CENTER, CLAY_ALIGN_Y_CENTER },
+            .sizing = { CLAY_SIZING_GROW(0), CLAY_SIZING_FIXED(75) },
+        },
+        .backgroundColor = BLUEGRAY,
+        .cornerRadius = 8,
+    }){
+        CLAY_TEXT(CLAY_STRING("Add Tags"), CLAY_TEXT_CONFIG({
+            .fontId = GOTHIC,
+            .fontSize = 32,
+            .textColor = OLDGOLD
+        }));
+    }
+}
+
+void renderSidebarButton(int wasPressed) {
+    if (wasPressed) {
+        renderGreenButton();
+    } else {
+        renderTagsButton();
     }
 }

@@ -17,5 +17,6 @@ extern const Clay_Color DARKMODE;
 extern const Clay_Color GARNET;
 extern const Clay_Color BLUEGRAY;
 extern const Clay_Color OLDGOLD;
+extern const Clay_Color GREENS;
 
 #endif
