@@ -11,5 +11,6 @@ void renderSongButton(struct song* song, int pos);
 void renderDirButton(struct directory* dir, int pos);
 void renderDirectory(struct directory* dir);
 void renderSidebarButton(int wasPressed);
+void renderDirHeader2();
 
 #endif

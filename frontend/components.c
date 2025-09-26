@@ -119,12 +119,64 @@ void renderDirButton(struct directory* dir, int pos) {
 }
 
 /*-------------------------------------------------------------------------------------------------
+    render directory header
+-------------------------------------------------------------------------------------------------*/
+
+void renderDirHeader(struct directory* dir, int pos) {
+    // Create unique ID for each button
+    Clay_String text = buildClayString(dir->dirPath);
+    Clay_ElementId dirId = Clay__HashString(text, pos, 0);
+    
+    CLAY({
+        .id = dirId,
+        .layout = { 
+            .sizing = { 
+                .width = CLAY_SIZING_GROW(0),
+                .height = CLAY_SIZING_FIXED(60) // Explicit height
+            },
+            .padding = CLAY_PADDING_ALL(16),
+            .childAlignment = { CLAY_ALIGN_X_CENTER, CLAY_ALIGN_Y_CENTER } 
+        },
+        .backgroundColor = BLUEGRAY,
+        .cornerRadius = 8,
+    }) {
+        CLAY_TEXT(text, CLAY_TEXT_CONFIG({ 
+            .fontId = GOTHIC, 
+            .fontSize = 40, 
+            .textColor = OLDGOLD
+        }));
+    }
+}
+
+void renderDirHeader2() {
+    CLAY({
+        .layout = { 
+            .sizing = { 
+                .width = CLAY_SIZING_GROW(0),
+                .height = CLAY_SIZING_FIXED(60) // Explicit height
+            },
+            .padding = CLAY_PADDING_ALL(16),
+            .childAlignment = { CLAY_ALIGN_X_CENTER, CLAY_ALIGN_Y_CENTER } 
+        },
+        .backgroundColor = GREENS,
+        .cornerRadius = 8,
+    }) {
+        CLAY_TEXT(CLAY_STRING("Adding MetaData"), CLAY_TEXT_CONFIG({ 
+            .fontId = GOTHIC, 
+            .fontSize = 40, 
+            .textColor = GARNET
+        }));
+    }
+}
+
+/*-------------------------------------------------------------------------------------------------
     render the full directory
 -------------------------------------------------------------------------------------------------*/
 
 void renderDirectory(struct directory* dir) {
     int i;
     int pos = 0;
+    renderDirHeader(dir, pos);
     //render directories
     if (dir->directories) {
         struct list* directories = dir->directories;
@@ -160,7 +212,7 @@ void renderGreenButton() {
         .backgroundColor = GREENS,
         .cornerRadius = 8,
     }){
-        CLAY_TEXT(CLAY_STRING("Tags Added"), CLAY_TEXT_CONFIG({
+        CLAY_TEXT(CLAY_STRING("Working"), CLAY_TEXT_CONFIG({
             .fontId = GOTHIC,
             .fontSize = 32,
             .textColor = GARNET

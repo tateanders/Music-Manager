@@ -173,13 +173,17 @@ struct directory* mainFrontend(Font* fonts, struct directory* dir, int goBack, i
                 },
                 .backgroundColor = BLUEGRAY  // even darker bg
             }){
-                renderDirectory(dir);
+                if(dir) {
+                    renderDirectory(dir);
+                } else {
+                    renderDirHeader2();
+                }
             }
     
         }
     }
 
-    if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)){
+    if (dir && IsMouseButtonPressed(MOUSE_LEFT_BUTTON) && dir->directories){
         // Check each user button
         for (int i = 0; i < list_getNumElements(dir->directories); i++) {
             struct directory* tempDir = list_getElement(dir->directories, i);
@@ -208,7 +212,7 @@ struct directory* mainFrontend(Font* fonts, struct directory* dir, int goBack, i
         }
         bId = Clay__HashString(CLAY_STRING("Add Tags"), 0, 0);
         if (Clay_PointerOver(bId)) {
-            *tagsAdded = 1200;
+            *tagsAdded = 1;
         }
     }
 

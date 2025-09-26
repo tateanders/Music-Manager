@@ -54,7 +54,6 @@ void freeDirectory(struct directory* directory){
 }
 
 char* truncateString(const char* input) {
-    if (!input) return NULL;
 
     size_t len = strlen(input);
     if (len <= 38) {
