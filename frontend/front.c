@@ -2,7 +2,6 @@
 #include "front.h"
 #include "clay_renderer_raylib.c"
 #include "components.h"
-#include <inttypes.h>
 
 /*-------------------------------------------------------------------------------------------------
     Error handler
@@ -112,16 +111,16 @@ struct directory* mainFrontend(Font* fonts, struct directory* dir, int goBack, i
 
     //mouse input stuff
     Vector2 mousePosition = GetMousePosition();
-    //Vector2 scrollDelta = GetMouseWheelMoveV();
+    Vector2 scrollDelta = GetMouseWheelMoveV();
     Clay_SetPointerState(
         (Clay_Vector2) { mousePosition.x, mousePosition.y },
         IsMouseButtonDown(0)
     );
-    // Clay_UpdateScrollContainers(
-    //     true,
-    //     (Clay_Vector2) { scrollDelta.x, scrollDelta.y},
-    //     GetFrameTime()
-    // );
+    Clay_UpdateScrollContainers(
+        true,
+        (Clay_Vector2) { scrollDelta.x, scrollDelta.y },
+        GetFrameTime()
+    );
 
     Clay_BeginLayout();
 
@@ -165,13 +164,14 @@ struct directory* mainFrontend(Font* fonts, struct directory* dir, int goBack, i
             // MAIN CONTENT (empty for now)
             CLAY({
                 .id = CLAY_ID("MainContent"),
+                .scroll = { .vertical = true },
                 .layout = {
                     .layoutDirection = CLAY_TOP_TO_BOTTOM,
-                    .sizing = { CLAY_SIZING_GROW(1), CLAY_SIZING_GROW(0) },
+                    .sizing = { CLAY_SIZING_GROW(0), CLAY_SIZING_GROW(0) },
                     .padding = CLAY_PADDING_ALL(10),
                     .childGap = 10,
                 },
-                .backgroundColor = BLUEGRAY  // even darker bg
+                .backgroundColor = BLUEGRAY,  // even darker bg
             }){
                 if(dir) {
                     renderDirectory(dir);
