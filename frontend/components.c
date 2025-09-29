@@ -18,9 +18,8 @@ Clay_String buildClayString(const char* string) { /*static inline*/
 -------------------------------------------------------------------------------------------------*/
 
 void renderBackButton() {
-    Clay_ElementId backButtonId = Clay__HashString(CLAY_STRING("Back Button Container"), 0, 0);
-    CLAY({
-        .id = backButtonId,
+    Clay_ElementId backButtonId = Clay__HashString(CLAY_STRING("Back Button Container"), 0);
+    CLAY( backButtonId, {
         .layout = {
             .childAlignment = { CLAY_ALIGN_X_CENTER, CLAY_ALIGN_Y_CENTER },
             .sizing = { CLAY_SIZING_FIXED(100), CLAY_SIZING_GROW(0) },
@@ -39,17 +38,13 @@ void renderBackButton() {
 
 void renderHeader(int goBack) {
     // HEADER
-    CLAY({
-        .id = CLAY_ID("Header"),
+    CLAY(CLAY_ID("Header"), {
         .layout = {
             .sizing = { CLAY_SIZING_GROW(0), CLAY_SIZING_FIXED(100) },  // full width, fixed height
-            .childAlignment = { CLAY_ALIGN_X_CENTER, CLAY_ALIGN_Y_CENTER },
-            //.padding = CLAY_PADDING_ALL(12)
+            .childAlignment = { .y = CLAY_ALIGN_Y_CENTER, .x = CLAY_ALIGN_X_CENTER},
             .layoutDirection = CLAY_LEFT_TO_RIGHT,
-            // .sizing = { CLAY_SIZING_GROW(0), CLAY_SIZING_GROW(0) },
-            // .childGap = 10
         },
-        .backgroundColor = GARNET,  // dark grey
+        .backgroundColor = GARNET  // dark grey
     }){
         if (goBack) {
             renderBackButton();
@@ -59,7 +54,7 @@ void renderHeader(int goBack) {
             .fontSize = 65,
             .textColor = BLUEGRAY
         }));
-    }
+    } 
 }
 
 /*-------------------------------------------------------------------------------------------------
@@ -69,10 +64,10 @@ void renderHeader(int goBack) {
 void renderSongButton(struct song* song, int pos) {
     // Create unique ID for each button
     Clay_String text = buildClayString(song->songName);
-    Clay_ElementId dirId = Clay__HashString(text, pos, 0);
+    Clay_ElementId songId = Clay__HashString(text, pos);
     
-    CLAY({
-        .id = dirId,
+    CLAY( songId, {
+        // .id = dirId,
         .layout = { 
             .sizing = { 
                 .width = CLAY_SIZING_GROW(0),
@@ -95,10 +90,10 @@ void renderSongButton(struct song* song, int pos) {
 void renderDirButton(struct directory* dir, int pos) {
     // Create unique ID for each button
     Clay_String text = buildClayString(dir->dirName);
-    Clay_ElementId dirId = Clay__HashString(text, pos, 0);
+    Clay_ElementId dirId = Clay__HashString(text, pos);
     
-    CLAY({
-        .id = dirId,
+    CLAY( dirId, {
+        // .id = dirId,
         .layout = { 
             .sizing = { 
                 .width = CLAY_SIZING_GROW(0),
@@ -125,10 +120,9 @@ void renderDirButton(struct directory* dir, int pos) {
 void renderDirHeader(struct directory* dir, int pos) {
     // Create unique ID for each button
     Clay_String text = buildClayString(dir->dirPath);
-    Clay_ElementId dirId = Clay__HashString(text, pos, 0);
+    Clay_ElementId dirId = Clay__HashString(text, pos);
     
-    CLAY({
-        .id = dirId,
+    CLAY( dirId, {
         .layout = { 
             .sizing = { 
                 .width = CLAY_SIZING_GROW(0),
@@ -149,7 +143,7 @@ void renderDirHeader(struct directory* dir, int pos) {
 }
 
 void renderDirHeader2() {
-    CLAY({
+    CLAY_AUTO_ID({
         .layout = { 
             .sizing = { 
                 .width = CLAY_SIZING_GROW(0),
@@ -202,9 +196,9 @@ void renderDirectory(struct directory* dir) {
 -------------------------------------------------------------------------------------------------*/
 
 void renderGreenButton() {
-    Clay_ElementId bId = Clay__HashString(CLAY_STRING("Tags Added"), 0, 0);
-    CLAY({
-        .id = bId,
+    Clay_ElementId bId = Clay__HashString(CLAY_STRING("Tags Added"), 0);
+    CLAY( bId, {
+        // .id = bId,
         .layout = {
             .childAlignment = { CLAY_ALIGN_X_CENTER, CLAY_ALIGN_Y_CENTER },
             .sizing = { CLAY_SIZING_GROW(0), CLAY_SIZING_FIXED(75) },
@@ -221,9 +215,9 @@ void renderGreenButton() {
 }
 
 void renderTagsButton() {
-    Clay_ElementId bId = Clay__HashString(CLAY_STRING("Add Tags"), 0, 0);
-    CLAY({
-        .id = bId,
+    Clay_ElementId bId = Clay__HashString(CLAY_STRING("Add Tags"), 0);
+    CLAY( bId, {
+        // .id = bId,
         .layout = {
             .childAlignment = { CLAY_ALIGN_X_CENTER, CLAY_ALIGN_Y_CENTER },
             .sizing = { CLAY_SIZING_GROW(0), CLAY_SIZING_FIXED(75) },

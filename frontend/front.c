@@ -125,8 +125,8 @@ struct directory* mainFrontend(Font* fonts, struct directory* dir, int goBack, i
     Clay_BeginLayout();
 
     //start build ui
-    CLAY({
-        .id = CLAY_ID("OuterContainer"),
+    CLAY( CLAY_ID("OuterContainer"), {
+        // .id = CLAY_ID("OuterContainer"),
         .layout = {
             .layoutDirection = CLAY_TOP_TO_BOTTOM,  // Stack Header on top of the main row
             .sizing = { CLAY_SIZING_GROW(0), CLAY_SIZING_GROW(0) },
@@ -137,8 +137,8 @@ struct directory* mainFrontend(Font* fonts, struct directory* dir, int goBack, i
     }){
         renderHeader(goBack);
         // MAIN ROW: contains sidebar and main content
-        CLAY({
-            .id = CLAY_ID("MainRow"),
+        CLAY( CLAY_ID("MainRow"), {
+            // .id = CLAY_ID("MainRow"),
             .layout = {
                 .layoutDirection = CLAY_LEFT_TO_RIGHT,
                 .sizing = { CLAY_SIZING_GROW(0), CLAY_SIZING_GROW(0) },
@@ -148,8 +148,8 @@ struct directory* mainFrontend(Font* fonts, struct directory* dir, int goBack, i
         }){
     
             // SIDEBAR
-            CLAY({
-                .id = CLAY_ID("SideBar"),
+            CLAY( CLAY_ID("SideBar"), {
+                // .id = CLAY_ID("SideBar"),
                 .layout = {
                     .layoutDirection = CLAY_TOP_TO_BOTTOM,
                     .sizing = { .width = CLAY_SIZING_FIXED(225), .height = CLAY_SIZING_GROW(0) },
@@ -162,9 +162,9 @@ struct directory* mainFrontend(Font* fonts, struct directory* dir, int goBack, i
             }
     
             // MAIN CONTENT (empty for now)
-            CLAY({
-                .id = CLAY_ID("MainContent"),
-                .scroll = { .vertical = true },
+            CLAY( CLAY_ID("MainContent"), {
+                // .id = CLAY_ID("MainContent"),
+                .clip = { .vertical = true, .childOffset = Clay_GetScrollOffset() },
                 .layout = {
                     .layoutDirection = CLAY_TOP_TO_BOTTOM,
                     .sizing = { CLAY_SIZING_GROW(0), CLAY_SIZING_GROW(0) },
@@ -188,7 +188,7 @@ struct directory* mainFrontend(Font* fonts, struct directory* dir, int goBack, i
         for (int i = 0; i < list_getNumElements(dir->directories); i++) {
             struct directory* tempDir = list_getElement(dir->directories, i);
             Clay_String dirName = buildClayString(tempDir->dirName);
-            Clay_ElementId btnId = Clay__HashString(dirName, i, 0);
+            Clay_ElementId btnId = Clay__HashString(dirName, i);
             if (Clay_PointerOver(btnId)) {
                 dir = tempDir;
                 break;
@@ -196,7 +196,8 @@ struct directory* mainFrontend(Font* fonts, struct directory* dir, int goBack, i
         }
     };
 
-    Clay_RenderCommandArray renderCommands = Clay_EndLayout();
+    Clay_RenderCommandArray renderCommands;
+    renderCommands = Clay_EndLayout();
 
     //now pass everything to raylib
     BeginDrawing();
@@ -206,11 +207,11 @@ struct directory* mainFrontend(Font* fonts, struct directory* dir, int goBack, i
 
     //check if the back button or add tags was pressed
     if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)){
-        Clay_ElementId bId = Clay__HashString(CLAY_STRING("Back Button Container"), 0, 0);
+        Clay_ElementId bId = Clay__HashString(CLAY_STRING("Back Button Container"), 0);
         if (Clay_PointerOver(bId)) {
             return NULL;
         }
-        bId = Clay__HashString(CLAY_STRING("Add Tags"), 0, 0);
+        bId = Clay__HashString(CLAY_STRING("Add Tags"), 0);
         if (Clay_PointerOver(bId)) {
             *tagsAdded = 1;
         }
