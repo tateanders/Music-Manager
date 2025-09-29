@@ -1,4 +1,5 @@
 #include "data.h"
+#include "metadata.h"
 
 /*-------------------------------------------------------------------------------------------------
     Structs
@@ -21,6 +22,21 @@
     Free functions
 -------------------------------------------------------------------------------------------------*/
 
+char* getSmallString(){
+    char* string = calloc(3, sizeof(char));
+    string[0] = '-';
+    string[1] = '-';
+    return string;
+}
+
+void replaceChars(char* str) {
+    for (int i = 0; str[i] != '\0'; i++) {
+        if (str[i] == '_') {
+            str[i] = ' ';
+        }
+    }
+}
+
 void freeSongs(struct dynarray* songs){
     struct song* song;
     int i;
@@ -29,6 +45,8 @@ void freeSongs(struct dynarray* songs){
         free(song->fileName);
         free(song->songName);
         free(song->fileType);
+        free(song->title);
+        free(song->artist);
         free(song);
     }
     dynarray_free(songs);
@@ -54,7 +72,6 @@ void freeDirectory(struct directory* directory){
 }
 
 char* truncateString(const char* input) {
-
     size_t len = strlen(input);
     if (len <= 38) {
         char* copy = malloc(len + 1);
@@ -119,13 +136,27 @@ struct song* createSong(struct dirent* entry, char* dirPath, int updateMD){
     song->fileType = (char*) calloc(len, sizeof(char));
     strcpy(song->fileType, dot + 1);
     //truncate the name of the song
-    char* newName = truncateString(song->songName);
-    free(song->songName);
-    song->songName = newName;
+    // char* newName = truncateString(song->songName);
+    // free(song->songName);
+    // song->songName = newName;
+    replaceChars(song->songName);
 
     //return
+    // if (updateMD == 1) {
+    //     addComment(entry, dirPath);
+    // }
+    char* comment = NULL;
     if (updateMD == 1) {
-        addComment(entry, dirPath);
+        comment = dirPath;
+    }
+    getSongData(entry, song, comment);
+    if (song->title) {
+        replaceChars(song->title);
+    } else {
+        song->title = getSmallString();
+    }
+    if (!song->artist) {
+        song->artist = getSmallString();
     }
     return song;
 }

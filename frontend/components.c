@@ -63,25 +63,40 @@ void renderHeader(int goBack) {
 
 void renderSongButton(struct song* song, int pos) {
     // Create unique ID for each button
-    Clay_String text = buildClayString(song->songName);
-    Clay_ElementId songId = Clay__HashString(text, pos);
-    
-    CLAY( songId, {
+    Clay_String songName = buildClayString(song->songName);
+    Clay_ElementId songId = Clay__HashString(songName, pos);
+    // Get the artist and song
+    Clay_String title;
+    if ((strcmp(song->title, "--") && strcmp(song->artist, "--")) == 0) {
+        title = buildClayString(song->songName);
+    } else {
+        title = buildClayString(song->title);
+    }
+    Clay_String artist = buildClayString(song->artist);
+    //print shit
+    CLAY(songId, {
         // .id = dirId,
         .layout = { 
             .sizing = { 
                 .width = CLAY_SIZING_GROW(0),
-                .height = CLAY_SIZING_FIXED(60) // Explicit height
+                .height = CLAY_SIZING_GROW(0) // Explicit height
             },
             .padding = CLAY_PADDING_ALL(16),
-            .childAlignment = { CLAY_ALIGN_X_CENTER, CLAY_ALIGN_Y_CENTER } 
+            .childAlignment = { CLAY_ALIGN_X_CENTER, CLAY_ALIGN_Y_CENTER },
+            .layoutDirection = CLAY_TOP_TO_BOTTOM
         },
         .backgroundColor = OLDGOLD,
         .cornerRadius = 8,
     }) {
-        CLAY_TEXT(text, CLAY_TEXT_CONFIG({ 
+        CLAY_TEXT(title, CLAY_TEXT_CONFIG({ 
+            .wrapMode = CLAY_TEXT_WRAP_WORDS,
             .fontId = GOTHIC, 
             .fontSize = 40, 
+            .textColor = GARNET
+        }));
+        CLAY_TEXT(artist, CLAY_TEXT_CONFIG({ 
+            .fontId = GOTHIC, 
+            .fontSize = 30, 
             .textColor = GARNET
         }));
     }

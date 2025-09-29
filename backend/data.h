@@ -8,7 +8,7 @@
 
 #include "structures/list.h"
 #include "structures/dynarray.h"
-#include "metadata.h"
+// #include "metadata.h"
 
 struct directory {
     char* dirName;
@@ -21,6 +21,8 @@ struct song {
     char* songName;
     char* fileName;
     char* fileType;
+    char* title;
+    char* artist;
 };
 
 void freeDirectory(struct directory*);
