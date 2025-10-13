@@ -1,7 +1,9 @@
 # Music Manager
 
 Music Manager is a lightweight, interactive MP3 file manager with a GUI frontend built using **Raylib** and **Clay UI**.  
-It is designed to help DJs organize their music collection efficiently and prepare their files for **Serato** smart crates.
+
+It is designed to help DJs organize their music collection efficiently and prepare their files for **Serato** smart crates.  
+
 This has only been tested on an ARM mac but should in theory work on Linux as well
 
 #### **Note: this program edits the metadata of ID3v2.3 and ID3v2.4 mp3 files and will overwrite any current comments you have.**
@@ -56,10 +58,10 @@ cmake clean-all
 
 ---
 acknowledgements:
-  - name: Clay UI
-    url: https://github.com/hughsk/clay
+  - name: Clay UI  
+    url: https://github.com/hughsk/clay  
     reason: "Lightweight and flexible UI components"
-  - name: Raylib
-    url: https://www.raylib.com/
+  - name: Raylib  
+    url: https://www.raylib.com/  
     reason: "Providing a simple and powerful graphics library to build the GUI frontend"
 ---
