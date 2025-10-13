@@ -34,7 +34,7 @@ void freeFonts(Font* fonts) {
 //sidebar buttons
 // uint32_t SelectedUserIndex = 0;
 
-//Clay_OnHover(HandleSidebarInteraction, i)
+// Clay_OnHover(HandleSidebarInteraction, i);
 // void HandleSidebarInteraction(Clay_ElementId elementId, Clay_PointerData pointerData, intptr_t userData){
 //     if (pointerData.state == CLAY_POINTER_DATA_PRESSED_THIS_FRAME){
 //         if (userData >= 0 && userData < user_arr.NumUsers){

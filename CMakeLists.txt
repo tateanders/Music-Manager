@@ -3,9 +3,17 @@ project(lib C)
 
 set(CMAKE_C_STANDARD 99)
 
-# Find Raylib using pkg-config
-find_package(PkgConfig REQUIRED)
-pkg_check_modules(RAYLIB REQUIRED raylib)
+# ---------------------------------------------------------
+# Fetch Raylib automatically (no need for manual install)
+# ---------------------------------------------------------
+include(FetchContent)
+FetchContent_Declare(
+    raylib
+    GIT_REPOSITORY https://github.com/raysan5/raylib.git
+    GIT_TAG 5.0  # You can change this to another version or branch
+)
+set(CMAKE_POLICY_VERSION_MINIMUM 3.5)
+FetchContent_MakeAvailable(raylib)
 
 # Include directories for Raylib and Clay
 include_directories(

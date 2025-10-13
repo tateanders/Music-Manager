@@ -1,22 +1,6 @@
 #include "data.h"
 #include "metadata.h"
-
-/*-------------------------------------------------------------------------------------------------
-    Structs
--------------------------------------------------------------------------------------------------*/
-
-// struct directory {
-//     char* dirName;
-//     char* dirPath;
-//     struct list* directories;
-//     struct dynarray* songs;
-// };
-
-// struct song {
-//     char* songName;
-//     char* fileName;
-//     char* fileType;
-// };
+#include <limits.h>
 
 /*-------------------------------------------------------------------------------------------------
     Free functions
@@ -71,28 +55,33 @@ void freeDirectory(struct directory* directory){
     return;
 }
 
-char* truncateString(const char* input) {
-    size_t len = strlen(input);
-    if (len <= 38) {
-        char* copy = malloc(len + 1);
-        if (!copy) return NULL;
-        memcpy(copy, input, len + 1); // include null terminator
-        return copy;
-    } else {
-        // 17 chars + "..." (3 chars) + '\0' = 21 bytes
-        char* truncated = malloc(35 + 3 + 1);
-        if (!truncated) return NULL;
-        memcpy(truncated, input, 35);       // copy first 17 bytes
-        memcpy(truncated + 35, "...", 4);   // copy '.' '.' '.' '\0'
-        return truncated;
-    }
-}
+// char* truncateString(const char* input) {
+//     size_t len = strlen(input);
+//     if (len <= 38) {
+//         char* copy = malloc(len + 1);
+//         if (!copy) return NULL;
+//         memcpy(copy, input, len + 1); // include null terminator
+//         return copy;
+//     } else {
+//         // 17 chars + "..." (3 chars) + '\0' = 21 bytes
+//         char* truncated = malloc(35 + 3 + 1);
+//         if (!truncated) return NULL;
+//         memcpy(truncated, input, 35);       // copy first 17 bytes
+//         memcpy(truncated + 35, "...", 4);   // copy '.' '.' '.' '\0'
+//         return truncated;
+//     }
+// }
 
 /*-------------------------------------------------------------------------------------------------
     Helper functions
 -------------------------------------------------------------------------------------------------*/
 
 DIR* openMusicDir(char* music){
+    //make sure we are in desktop
+    char cwd[PATH_MAX];
+    getcwd(cwd, sizeof(cwd));
+    //gave up dont care will fix *eventually*
+
     DIR* musicDir = opendir(music);
     if (!musicDir) {
         chdir("Desktop");
@@ -126,11 +115,21 @@ struct song* createSong(struct dirent* entry, char* dirPath, int updateMD){
     song->fileName = (char*) calloc(strlen(entry->d_name) + 1, sizeof(char));
     strcpy(song->fileName, entry->d_name);
     //get the songs name and null terminate it
-    const char* dot = strrchr(song->fileName, '.');
-    size_t len = (size_t) (dot - song->fileName);
-    song->songName = (char*) calloc(len + 1, sizeof(char));
-    strncpy(song->songName, song->fileName, len);
-    song->songName[len] = '\0';
+    size_t len;
+    const char* dot = strrchr(song->fileName, '.'); // find last dot
+    //stuff
+    if (dot && dot != song->fileName) {
+        //dot found
+        len = (size_t) (dot - song->fileName);
+        song->songName = (char*)calloc(len + 1, sizeof(char));
+        strncpy(song->songName, song->fileName, len);
+        song->songName[len] = '\0';
+    } else {
+        //no extension found
+        song->songName = strdup(song->fileName);
+        song->fileType = strdup("");
+    }
+
     //get the songs file extension
     len = (strlen(song->fileName) - strlen(song->songName));
     song->fileType = (char*) calloc(len, sizeof(char));
@@ -158,6 +157,12 @@ struct song* createSong(struct dirent* entry, char* dirPath, int updateMD){
     if (!song->artist) {
         song->artist = getSmallString();
     }
+
+    //debug prints
+    // printf("\nSize: %lu, SongName: %s\n", strlen(song->songName), song->songName);
+    // printf("Size: %lu, Title: %s\n", strlen(song->title), song->title);
+    // printf("Size: %lu, Artist: %s\n", strlen(song->artist), song->artist);
+
     return song;
 }
 
@@ -231,6 +236,7 @@ struct directory* fillDirectory(DIR* dir, char* dirName, char* dirPath, int upda
                     directory->songs = (struct dynarray*) dynarray_create();
                 }
                 //create and insert a new song
+                // printf("\n\nDirectory: %s\n", directory->dirPath);
                 struct song* song = createSong(entry, directory->dirPath, updateMD);
                 dynarray_insert(directory->songs, song);
             }
