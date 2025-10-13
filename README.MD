@@ -1,10 +1,10 @@
 # Music Manager
 
 Music Manager is a lightweight, interactive MP3 file manager with a GUI frontend built using **Raylib** and **Clay UI**.  
-It is designed to help DJs and music enthusiasts organize their music collection efficiently and prepare their files for **Serato** smart crates.
+It is designed to help DJs organize their music collection efficiently and prepare their files for **Serato** smart crates.
 
 **This has only been tested on an ARM mac but should in theory work on Linux as well.**
-
+**Note: this program edits the metadata of ID3v2.3 and ID3v2.4 mp3 files and will overwrite any current comments you have.**
 ---
 
 ## Features
@@ -31,11 +31,26 @@ It is designed to help DJs and music enthusiasts organize their music collection
 cd Desktop
 git clone <your-repo-url>
 cd <your-repo-name>
+```
+
+2. Build the executable:
+
+```bash
 mkdir build
 cd build
 cmake ..
 make
+```
+
+3. Run:
+
+```bash
 ./lib
+```
+
+4. Decompile:
+
+```bash
 cmake clean-all
 ```
 
