@@ -59,9 +59,9 @@ cmake clean-all
 ---
 acknowledgements:
   - name: Clay UI  
-    url: https://github.com/hughsk/clay  
+    url: https://github.com/nicbarker/clay.git 
     reason: "Lightweight and flexible UI components"
   - name: Raylib  
-    url: https://www.raylib.com/  
+    url: https://github.com/raysan5/raylib.git
     reason: "Providing a simple and powerful graphics library to build the GUI frontend"
 ---
