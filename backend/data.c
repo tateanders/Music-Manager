@@ -55,6 +55,18 @@ void freeDirectory(struct directory* directory){
     return;
 }
 
+void freeDups(struct dynarray* dups) {
+    int i;
+    int n;
+    for (i = 0; i < n; i++) {
+        struct duplicate* dup = (struct duplicate*)dynarray_get(dups, i);
+        dynarray_remove(dups, i);
+        free(dup->hash);
+        free(dup);
+    }
+    dynarray_free(dups);
+}
+
 // char* truncateString(const char* input) {
 //     size_t len = strlen(input);
 //     if (len <= 38) {
@@ -139,11 +151,7 @@ struct song* createSong(struct dirent* entry, char* dirPath, int updateMD){
     // free(song->songName);
     // song->songName = newName;
     replaceChars(song->songName);
-
-    //return
-    // if (updateMD == 1) {
-    //     addComment(entry, dirPath);
-    // }
+    //add comments
     char* comment = NULL;
     if (updateMD == 1) {
         comment = dirPath;
@@ -285,6 +293,97 @@ void printDirectory(struct directory* directory, int numSpaces){
 }
 
 /*-------------------------------------------------------------------------------------------------
+    Find duplicates helper
+-------------------------------------------------------------------------------------------------*/
+
+//djb2 hash function
+unsigned long hashString(char* string) {
+    unsigned long hash = 5381;
+    int n;
+    while ((n = *string++))
+        hash = ((hash << 5) + hash) + n;
+    return hash;
+}
+
+//checks if the hash is in the dynamic array
+int isHashIn(unsigned long hash, struct dynarray* arr) {
+    int arrSize = dynarray_size(arr);
+    int i;
+    for (i = 0; i < arrSize; i++) {
+        unsigned long* arrHash = (unsigned long*)dynarray_get(arr, i);
+        if (hash == *arrHash) {
+            return i;
+        }
+    }
+    return -1;
+}
+
+void hashSong (struct song* song, char* dirPath, struct dynarray* hashArr) {
+    unsigned long songHash;
+    struct duplicate* dup;
+    //hash the song
+    if(song->title) {
+        songHash = hashString(song->title);
+    } else {
+        songHash = hashString(song->songName);
+    }
+    int pos = isHashIn(songHash, hashArr);
+    //if the song is not a duplicate
+    if (pos == -1) {
+        dup = calloc(1, sizeof(struct duplicate));
+        if(song->title) {
+            dup->title = song->title;
+        } else {
+            dup->title = song->songName;
+        }
+        dup->hash = calloc(1, sizeof(unsigned long));
+        dup->hash = &songHash;
+        dup->locations = dynarray_create();
+        dynarray_insert(dup->locations, dirPath);
+        dup->num = 1;
+
+        dynarray_insert(hashArr, dup);
+    } else {
+        dup = dynarray_get(hashArr, pos);
+        dynarray_insert(dup->locations, dirPath);
+        dup->num++;
+    }
+}
+
+void hashSongs(struct directory* directory, struct dynarray* hashArr) {
+    int i;
+    //recursive call to all subdirectories
+    if(directory->directories) {
+        int numDirs = list_getNumElements(directory->directories);
+        for (i = 0; i < numDirs; i++){
+            struct directory* newDir = list_getElement(directory->directories, i);
+            hashSongs(newDir, hashArr);
+        }
+    }
+    //actually do the song stuff
+    if(directory->songs) {
+        int numSongs = dynarray_size(directory->songs);
+        for(i = 0; i < numSongs; i++){
+            struct song* song = dynarray_get(directory->songs, i);
+            hashSong(song, directory->dirPath, hashArr);
+        }
+    }
+}
+
+void consolidateDups(struct dynarray* hashArr) {
+    int i;
+    int n = dynarray_size(hashArr);
+    for (i = 0; i < n; i++) {
+        struct duplicate* dup = (struct duplicate*)dynarray_get(hashArr, i);
+        if (dup->num > 1) {
+            dynarray_remove(hashArr, i);
+            free(dup->hash);
+            free(dup);
+        }
+    }
+}
+
+/*-------------------------------------------------------------------------------------------------
     Main function
 -------------------------------------------------------------------------------------------------*/
 
@@ -299,10 +398,24 @@ struct directory* getMusic(char* musicDirName, int updateMD) {
         printf("Updating Metadata\n");
     }
     struct directory* music = fillDirectory(musicDir, musicDirName, NULL, updateMD);
-    if (updateMD) {
+    if (updateMD == 1) {
         printf("Metadata Updated\n");
     }
     closedir(musicDir);
 
     return music;
+}
+
+struct dynarray* findDuplicates(struct directory* directory) {
+    //err handler
+    if (!directory) {
+        printf("Directory not given.\n");
+        return NULL;
+    }
+    //get the array of hased songs
+    struct dynarray* hashArr = dynarray_create();
+    hashSongs(directory, hashArr);
+    //remove non-duplicates
+    consolidateDups(hashArr);
+    return hashArr;
 }

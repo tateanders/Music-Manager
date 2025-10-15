@@ -2,53 +2,45 @@
 #include <pthread.h>
 
 int main() {
+    struct dataToShow* data = calloc(1, sizeof(struct dataToShow));
     //initialize the frontend
-    Font* fonts = initFrontend();
+    data->fonts = initFrontend();
 
     //get the music
-    struct directory* OGDir = getMusic("Mp3", 0);
-    struct directory* dir = OGDir;
+    data->dir = getMusic("Mp3", 0);
 
     //back button stuff
     struct list* backList = list_create();
-    int goBack = 0;
-
-    //tag button stuff
-    int addedTags = 0;
-    int* tagsAdded = &addedTags;
 
     //run the frontend
     while (!WindowShouldClose()) {
         //run frontend
-        struct directory* newDir = mainFrontend(fonts, dir, goBack, tagsAdded);
-        if (newDir == 0) {
+        mainFrontend(data, backList);
+        if (data->backPushed) {
             //if the back button got pushed
-            dir = list_pop(backList);
-            if (list_getNumElements(backList) == 0) {
-                goBack = 0;
-            }
-        } else if (*tagsAdded) {
-            //if the add metadata button got pushed
-            mainFrontend(fonts, NULL, goBack, tagsAdded);
-            freeDirectory(OGDir);
-            list_free(backList);
-            backList = list_create();
-            OGDir = getMusic("Mp3", 1);
-            dir = OGDir;
-            *tagsAdded = 0;
-            goBack = 0;
-            mainFrontend(fonts, OGDir, goBack, tagsAdded);
-        } else if (newDir != dir) {
+            data->dir = list_pop(backList);
+            data->backPushed = 0;
+        } else if (data->dirPushed) {
             //if a directory button got pushed
-            list_insert(backList, dir);
-            dir = newDir;
-            goBack = 1;
+            data->dirPushed = 0;
         }
+        else if (data->tagsAdded) {
+            //if the add metadata button got pushed
+            mainFrontend(data, backList);
+            freeDirectory(data->dir);
+            list_free(backList);
+            data->dir = getMusic("Mp3", 1);
+            backList = list_create();
+            data->tagsAdded = 0;
+            mainFrontend(data, backList);
+        }
+
     }
 
     //prevent memory leaks
     list_free(backList);
-    freeFonts(fonts);
-    freeDirectory(OGDir);
+    freeFonts(data->fonts);
+    freeDirectory(data->dir);
+    free(data);
     return 0;
 }

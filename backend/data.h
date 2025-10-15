@@ -25,7 +25,16 @@ struct song {
     char* artist;
 };
 
-void freeDirectory(struct directory*);
-struct directory* getMusic(char*, int);
+struct duplicate {
+    char* title;
+    unsigned long* hash;
+    struct dynarray* locations;
+    int num;
+};
+
+void freeDirectory(struct directory* dirName);
+void freeDups(struct dynarray* dups);
+struct directory* getMusic(char* musicDirName, int updateMD);
+struct dynarray* findDuplicates(struct directory* directory);
 
 #endif

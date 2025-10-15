@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <assert.h>
 #include "list.h"
+#include <stdio.h>
 
 /*-------------------------------------------------------------------------------------------------
     Structs

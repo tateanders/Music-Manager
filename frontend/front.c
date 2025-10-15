@@ -100,8 +100,7 @@ int windowShouldUpdate() {
 /*-------------------------------------------------------------------------------------------------
     Main function
 -------------------------------------------------------------------------------------------------*/
-
-struct directory* mainFrontend(Font* fonts, struct directory* dir, int goBack, int* tagsAdded){
+struct dataToShow* mainFrontend(struct dataToShow* data, struct list* backList) {
     //run once per frame
     //make the window resizeable
     Clay_SetLayoutDimensions((Clay_Dimensions){
@@ -135,7 +134,7 @@ struct directory* mainFrontend(Font* fonts, struct directory* dir, int goBack, i
         },
         .backgroundColor = DARKMODE
     }){
-        renderHeader(goBack);
+        renderHeader(list_getNumElements(backList));
         // MAIN ROW: contains sidebar and main content
         CLAY( CLAY_ID("MainRow"), {
             // .id = CLAY_ID("MainRow"),
@@ -158,7 +157,7 @@ struct directory* mainFrontend(Font* fonts, struct directory* dir, int goBack, i
                 },
                 .backgroundColor = OLDGOLD
             }){
-                renderSidebarButton(*tagsAdded);
+                renderSidebarButton(data->tagsAdded);
             }
     
             // MAIN CONTENT (empty for now)
@@ -173,28 +172,15 @@ struct directory* mainFrontend(Font* fonts, struct directory* dir, int goBack, i
                 },
                 .backgroundColor = BLUEGRAY,  // even darker bg
             }){
-                if(dir) {
-                    renderDirectory(dir);
-                } else {
+                if(data->tagsAdded) {
                     renderDirHeader2();
+                } else {
+                    renderDirectory(data->dir);
                 }
             }
     
         }
     }
-
-    if (dir && IsMouseButtonPressed(MOUSE_LEFT_BUTTON) && dir->directories){
-        // Check each user button
-        for (int i = 0; i < list_getNumElements(dir->directories); i++) {
-            struct directory* tempDir = list_getElement(dir->directories, i);
-            Clay_String dirName = buildClayString(tempDir->dirName);
-            Clay_ElementId btnId = Clay__HashString(dirName, i);
-            if (Clay_PointerOver(btnId)) {
-                dir = tempDir;
-                break;
-            }
-        }
-    };
 
     Clay_RenderCommandArray renderCommands;
     renderCommands = Clay_EndLayout();
@@ -202,20 +188,34 @@ struct directory* mainFrontend(Font* fonts, struct directory* dir, int goBack, i
     //now pass everything to raylib
     BeginDrawing();
     ClearBackground(BLACK);
-    Clay_Raylib_Render(renderCommands, fonts);
+    Clay_Raylib_Render(renderCommands, data->fonts);
     EndDrawing();
 
     //check if the back button or add tags was pressed
     if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)){
         Clay_ElementId bId = Clay__HashString(CLAY_STRING("Back Button Container"), 0);
         if (Clay_PointerOver(bId)) {
-            return NULL;
+            data->backPushed = 1;
         }
         bId = Clay__HashString(CLAY_STRING("Add Tags"), 0);
         if (Clay_PointerOver(bId)) {
-            *tagsAdded = 1;
+            data->tagsAdded = 1;
         }
     }
+    // Check if a user button was pushed
+    if (data->dir && IsMouseButtonPressed(MOUSE_LEFT_BUTTON) && data->dir->directories){
+        for (int i = 0; i < list_getNumElements(data->dir->directories); i++) {
+            struct directory* tempDir = list_getElement(data->dir->directories, i);
+            Clay_String dirName = buildClayString(tempDir->dirName);
+            Clay_ElementId btnId = Clay__HashString(dirName, i);
+            if (Clay_PointerOver(btnId)) {
+                list_insert(backList, data->dir);
+                data->dir = tempDir;
+                data->dirPushed = 1;
+                break;
+            }
+        }
+    };
 
-    return dir;
+    return data;
 }
