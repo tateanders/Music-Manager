@@ -2,10 +2,9 @@
 #define __FRONT_H
 #include "clay.h"
 #include "globals.h"
-// #include "raymath.h"
-// #include "clay_renderer_raylib.c"
 #include "raylib.h"
 #include "data.h"
+#include "duplicates.h"
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -13,8 +12,10 @@ struct dataToShow {
     Font* fonts;
     struct directory* dir;
     int tagsAdded;
-    int dirPushed;
+    int findDups;
     int backPushed;
+    struct dynarray* duplicates;
+    int showDuplicates;
 };
 
 /*-------------------------------------------------------------------------------------------------

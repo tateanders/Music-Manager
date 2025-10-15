@@ -10,7 +10,8 @@ void renderHeader(int);
 void renderSongButton(struct song* song, int pos);
 void renderDirButton(struct directory* dir, int pos);
 void renderDirectory(struct directory* dir);
-void renderSidebarButton(int wasPressed);
+void renderSidebarButtons(int tags, int dups);
 void renderDirHeader2();
+void renderDups(struct dynarray* duplicates);
 
 #endif

@@ -36,6 +36,7 @@ set(CLAY_SOURCES
     frontend/components.c
     frontend/globals.c
     backend/data.c
+    backend/duplicates.c
     backend/metadata.c
     backend/ID3v2dot3/editID3v2dot3.c
     backend/ID3v2dot3/readID3v2dot3.c

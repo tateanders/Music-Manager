@@ -157,7 +157,7 @@ struct dataToShow* mainFrontend(struct dataToShow* data, struct list* backList) 
                 },
                 .backgroundColor = OLDGOLD
             }){
-                renderSidebarButton(data->tagsAdded);
+                renderSidebarButtons(data->tagsAdded, data->findDups);
             }
     
             // MAIN CONTENT (empty for now)
@@ -172,8 +172,10 @@ struct dataToShow* mainFrontend(struct dataToShow* data, struct list* backList) 
                 },
                 .backgroundColor = BLUEGRAY,  // even darker bg
             }){
-                if(data->tagsAdded) {
+                if(data->tagsAdded || data->findDups) {
                     renderDirHeader2();
+                } else if (data->showDuplicates) {
+                    renderDups(data->duplicates);
                 } else {
                     renderDirectory(data->dir);
                 }
@@ -191,19 +193,27 @@ struct dataToShow* mainFrontend(struct dataToShow* data, struct list* backList) 
     Clay_Raylib_Render(renderCommands, data->fonts);
     EndDrawing();
 
-    //check if the back button or add tags was pressed
+    //check if the back button or sidebar buttons
     if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)){
         Clay_ElementId bId = Clay__HashString(CLAY_STRING("Back Button Container"), 0);
         if (Clay_PointerOver(bId)) {
             data->backPushed = 1;
+            if (data->duplicates) {
+                freeDups(data->duplicates);
+                data->showDuplicates = 0;
+            }
         }
         bId = Clay__HashString(CLAY_STRING("Add Tags"), 0);
         if (Clay_PointerOver(bId)) {
             data->tagsAdded = 1;
         }
+        bId = Clay__HashString(CLAY_STRING("Find Dups"), 0);
+        if (Clay_PointerOver(bId)) {
+            data->findDups = 1;
+        }
     }
     // Check if a user button was pushed
-    if (data->dir && IsMouseButtonPressed(MOUSE_LEFT_BUTTON) && data->dir->directories){
+    else if (data->dir && IsMouseButtonPressed(MOUSE_LEFT_BUTTON) && data->dir->directories){
         for (int i = 0; i < list_getNumElements(data->dir->directories); i++) {
             struct directory* tempDir = list_getElement(data->dir->directories, i);
             Clay_String dirName = buildClayString(tempDir->dirName);
@@ -211,7 +221,7 @@ struct dataToShow* mainFrontend(struct dataToShow* data, struct list* backList) 
             if (Clay_PointerOver(btnId)) {
                 list_insert(backList, data->dir);
                 data->dir = tempDir;
-                data->dirPushed = 1;
+                // data->dirPushed = 1;
                 break;
             }
         }

@@ -58,6 +58,94 @@ void renderHeader(int goBack) {
 }
 
 /*-------------------------------------------------------------------------------------------------
+    render duplicates
+-------------------------------------------------------------------------------------------------*/
+
+void renderDup(struct duplicate* dup, int pos) {
+    char dest[128] = "Title: ";
+    strcat(dest, dup->title);
+    Clay_String title = buildClayString(dup->title);
+    Clay_ElementId songId = Clay__HashString(title, pos);
+
+    CLAY(songId, {
+        .layout = { 
+            .sizing = { 
+                .width = CLAY_SIZING_GROW(0),
+                .height = CLAY_SIZING_GROW(0) // Explicit height
+            },
+            .padding = CLAY_PADDING_ALL(16),
+            .childAlignment = { CLAY_ALIGN_X_CENTER, CLAY_ALIGN_Y_CENTER },
+            .layoutDirection = CLAY_TOP_TO_BOTTOM
+        },
+        .backgroundColor = OLDGOLD,
+        .cornerRadius = 8,
+    }) {
+        CLAY_TEXT(title, CLAY_TEXT_CONFIG({ 
+            .wrapMode = CLAY_TEXT_WRAP_WORDS,
+            .fontId = GOTHIC, 
+            .fontSize = 40, 
+            .textColor = GARNET
+        }));
+        CLAY_TEXT(CLAY_STRING("Appears in:"), CLAY_TEXT_CONFIG({ 
+            .fontId = GOTHIC, 
+            .fontSize = 40, 
+            .textColor = BLUEGRAY
+        }));
+        int i;
+        for (i = 0; i < dup->num; i++) {
+            Clay_String dir = buildClayString((char*)dynarray_get(dup->locations, i));
+            CLAY_TEXT(dir, CLAY_TEXT_CONFIG({ 
+                .fontId = GOTHIC, 
+                .fontSize = 30, 
+                .textColor = GARNET
+            }));
+        }
+    }
+}
+
+void renderDupHeader(Clay_String text) {
+    Clay_ElementId dirId = Clay__HashString(text, 0);
+    
+    CLAY( dirId, {
+        .layout = { 
+            .sizing = { 
+                .width = CLAY_SIZING_GROW(0),
+                .height = CLAY_SIZING_FIXED(60) // Explicit height
+            },
+            .padding = CLAY_PADDING_ALL(16),
+            .childAlignment = { CLAY_ALIGN_X_CENTER, CLAY_ALIGN_Y_CENTER } 
+        },
+        .backgroundColor = BLUEGRAY,
+        .cornerRadius = 8,
+    }) {
+        CLAY_TEXT(text, CLAY_TEXT_CONFIG({ 
+            .fontId = GOTHIC, 
+            .fontSize = 40, 
+            .textColor = OLDGOLD
+        }));
+    }
+}
+
+void renderDups(struct dynarray* duplicates) {
+    Clay_String text;
+    int numDups = dynarray_size(duplicates);
+    int i;
+    if(!numDups) {
+        //tell the user there are no duplicates
+        text = buildClayString("No Duplicates Found.");
+        renderDupHeader(text);
+        return;
+    }
+    //show the header
+    text = buildClayString("Duplicates found!");
+    renderDupHeader(text);
+    for (i = 0; i < numDups; i++) {
+        struct duplicate* dup = dynarray_get(duplicates, i);
+        // renderDup(dup, i);
+    }
+}
+
+/*-------------------------------------------------------------------------------------------------
     render song and directory buttons
 -------------------------------------------------------------------------------------------------*/
 
@@ -170,7 +258,7 @@ void renderDirHeader2() {
         .backgroundColor = GREENS,
         .cornerRadius = 8,
     }) {
-        CLAY_TEXT(CLAY_STRING("Adding MetaData"), CLAY_TEXT_CONFIG({ 
+        CLAY_TEXT(CLAY_STRING("Working..."), CLAY_TEXT_CONFIG({ 
             .fontId = GOTHIC, 
             .fontSize = 40, 
             .textColor = GARNET
@@ -207,11 +295,11 @@ void renderDirectory(struct directory* dir) {
 }
 
 /*-------------------------------------------------------------------------------------------------
-    render the sideBar button
+    render the sideBar buttons
 -------------------------------------------------------------------------------------------------*/
 
 void renderGreenButton() {
-    Clay_ElementId bId = Clay__HashString(CLAY_STRING("Tags Added"), 0);
+    Clay_ElementId bId = Clay__HashString(CLAY_STRING("x"), 0);
     CLAY( bId, {
         // .id = bId,
         .layout = {
@@ -229,8 +317,9 @@ void renderGreenButton() {
     }
 }
 
-void renderTagsButton() {
-    Clay_ElementId bId = Clay__HashString(CLAY_STRING("Add Tags"), 0);
+void renderSidebarButton(Clay_String text) {
+    Clay_ElementId bId = Clay__HashString(text, 0);
+    bId = Clay__HashString(text, 0);
     CLAY( bId, {
         // .id = bId,
         .layout = {
@@ -240,7 +329,7 @@ void renderTagsButton() {
         .backgroundColor = BLUEGRAY,
         .cornerRadius = 8,
     }){
-        CLAY_TEXT(CLAY_STRING("Add Tags"), CLAY_TEXT_CONFIG({
+        CLAY_TEXT(text, CLAY_TEXT_CONFIG({
             .fontId = GOTHIC,
             .fontSize = 32,
             .textColor = OLDGOLD
@@ -248,10 +337,17 @@ void renderTagsButton() {
     }
 }
 
-void renderSidebarButton(int wasPressed) {
-    if (wasPressed) {
+void renderSidebarButtons(int tags, int dups) {
+    Clay_String tagString = buildClayString("Add Tags");
+    Clay_String dupString = buildClayString("Find Dups");
+    if (tags) {
+        renderGreenButton();
+        renderSidebarButton(dupString);
+    } else if (dups) {
+        renderSidebarButton(tagString);
         renderGreenButton();
     } else {
-        renderTagsButton();
+        renderSidebarButton(tagString);
+        renderSidebarButton(dupString);
     }
 }

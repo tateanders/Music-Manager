@@ -8,6 +8,7 @@
 
 #include "structures/list.h"
 #include "structures/dynarray.h"
+
 // #include "metadata.h"
 
 struct directory {
@@ -25,16 +26,7 @@ struct song {
     char* artist;
 };
 
-struct duplicate {
-    char* title;
-    unsigned long* hash;
-    struct dynarray* locations;
-    int num;
-};
-
 void freeDirectory(struct directory* dirName);
-void freeDups(struct dynarray* dups);
 struct directory* getMusic(char* musicDirName, int updateMD);
-struct dynarray* findDuplicates(struct directory* directory);
 
 #endif
