@@ -6,7 +6,7 @@ struct duplicate {
     char* title;
     unsigned long hash;
     struct dynarray* locations;
-    int num;
+    // int num;
 };
 
 void freeDups(struct dynarray* dups);

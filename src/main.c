@@ -6,7 +6,8 @@ int main() {
     data->fonts = initFrontend();
 
     //get the music
-    data->dir = getMusic("Mp3", 0);
+    struct directory* OGDir = getMusic("Mp3", 0);
+    data->dir = OGDir;
 
     //back button stuff
     struct list* backList = list_create();
@@ -23,9 +24,10 @@ int main() {
             //bin stuff
             list_free(backList);
             mainFrontend(data, backList);
-            freeDirectory(data->dir);
+            freeDirectory(OGDir);
             //get stuff back
-            data->dir = getMusic("Mp3", 1);
+            OGDir = getMusic("Mp3", 1);
+            data->dir = OGDir;
             backList = list_create();
             data->tagsAdded = 0;
             mainFrontend(data, backList);
@@ -34,9 +36,10 @@ int main() {
             //bin stuff
             list_free(backList);
             mainFrontend(data, backList);
-            freeDirectory(data->dir);
-            data->dir = getMusic("Mp3", 0);
+            freeDirectory(OGDir);
             //get stuff back
+            OGDir = getMusic("Mp3", 0);
+            data->dir = OGDir;
             backList = list_create();
             list_insert(backList, data->dir);
             data->findDups = 0;
@@ -45,7 +48,6 @@ int main() {
             data->showDuplicates = 1;
             mainFrontend(data, backList);
         }
-
     }
 
     //prevent memory leaks
@@ -54,7 +56,7 @@ int main() {
     }
     list_free(backList);
     freeFonts(data->fonts);
-    freeDirectory(data->dir);
+    freeDirectory(OGDir);
     free(data);
     return 0;
 }

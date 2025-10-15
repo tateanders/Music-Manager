@@ -92,7 +92,7 @@ void renderDup(struct duplicate* dup, int pos) {
             .textColor = BLUEGRAY
         }));
         int i;
-        for (i = 0; i < dup->num; i++) {
+        for (i = 0; i < dynarray_size(dup->locations); i++) {
             Clay_String dir = buildClayString((char*)dynarray_get(dup->locations, i));
             CLAY_TEXT(dir, CLAY_TEXT_CONFIG({ 
                 .fontId = GOTHIC, 
@@ -141,7 +141,7 @@ void renderDups(struct dynarray* duplicates) {
     renderDupHeader(text);
     for (i = 0; i < numDups; i++) {
         struct duplicate* dup = dynarray_get(duplicates, i);
-        // renderDup(dup, i);
+        renderDup(dup, i);
     }
 }
 

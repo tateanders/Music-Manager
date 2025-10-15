@@ -9,22 +9,30 @@ void freeDup(struct duplicate* dup){
     free(dup);
 }
 
-void freeDups(struct dynarray* dups){
+void freeDups(struct dynarray* dupArr){
     int i;
-    int n;
-    for (i = 0; i < n; i++) {
-        struct duplicate* dup = (struct duplicate*)dynarray_get(dups, i);
-        dynarray_remove(dups, i);
-        printf("debug1\n");
-        free(dup);
+    for (i = 0; i < dynarray_size(dupArr); i++) {
+        struct duplicate* dup = (struct duplicate*)dynarray_get(dupArr, i);
+        freeDup(dup);
     }
-    printf("debug2\n");
-    dynarray_free(dups);
-    printf("debug3\n");
+    dynarray_free(dupArr);
 }
 
 /*-------------------------------------------------------------------------------------------------
-    Find duplicates helpers
+    create function
+-------------------------------------------------------------------------------------------------*/
+
+struct duplicate* createDuplicate(char* title, unsigned long hash, char* location) {
+    struct duplicate* dup = (struct duplicate*)calloc(1, sizeof(struct duplicate));
+    dup->title = title;
+    dup->hash = hash;
+    dup->locations = dynarray_create();
+    dynarray_insert(dup->locations, location);
+    return dup;
+}
+
+/*-------------------------------------------------------------------------------------------------
+    Hash functions
 -------------------------------------------------------------------------------------------------*/
 
 //djb2 hash function
@@ -38,78 +46,67 @@ unsigned long hashString(char* string) {
 }
 
 //checks if the hash is in the dynamic array
-int isHashIn(unsigned long hash, struct dynarray* arr) {
-    int arrSize = dynarray_size(arr);
+int isHashIn(unsigned long hash, struct dynarray* dupArr) {
     int i;
-    for (i = 0; i < arrSize; i++) {
-        unsigned long* arrHash = (unsigned long*)dynarray_get(arr, i);
-        if (hash == *arrHash) {
+    for (i = 0; i < dynarray_size(dupArr); i++) {
+        struct duplicate* dup = (struct duplicate*)dynarray_get(dupArr, i);
+        if (hash == dup->hash) {
             return i;
         }
     }
     return -1;
 }
 
-void hashSong(struct song* song, char* dirPath, struct dynarray* hashArr) {
-    unsigned long songHash;
-    struct duplicate* dup = calloc(1, sizeof(struct duplicate));
+/*-------------------------------------------------------------------------------------------------
+    Find duplicates helpers
+-------------------------------------------------------------------------------------------------*/
+
+void sortSong(struct song* song, char* dirPath, struct dynarray* dupArr) {
+    unsigned long hash;
     //hash the song
     if(song->title) {
-        dup->hash = hashString(song->title);
+        hash = hashString(song->title);
     } else {
-        dup->hash = hashString(song->songName);
+        hash = hashString(song->songName);
     }
-    int pos = isHashIn(dup->hash, hashArr);
-    //if the song is not a duplicate
+    int pos = isHashIn(hash, dupArr);
     if (pos == -1) {
-        if(song->title) {
-            dup->title = song->title;
-        } else {
-            dup->title = song->songName;
-        }
-        dup->locations = dynarray_create();
-        dynarray_insert(dup->locations, dirPath);
-        dup->num = 1;
-
-        dynarray_insert(hashArr, dup);
+        //if the song is not a duplicate
+        struct duplicate* dup = createDuplicate(song->title, hash, dirPath);
+        dynarray_insert(dupArr, dup);
     } else {
-        free(dup);
-        struct duplicate* dup2 = dynarray_get(hashArr, pos);
+        //if the song is a duplicate
+        struct duplicate* dup2 = dynarray_get(dupArr, pos);
         dynarray_insert(dup2->locations, dirPath);
-        dup2->num++;
     }
 }
 
-void hashSongs(struct directory* directory, struct dynarray* hashArr) {
+void sortSongs(struct directory* directory, struct dynarray* dupArr) {
     int i;
     //recursive call to all subdirectories
     if(directory->directories) {
-        int numDirs = list_getNumElements(directory->directories);
-        for (i = 0; i < numDirs; i++){
+        for (i = 0; i < list_getNumElements(directory->directories); i++){
             struct directory* newDir = list_getElement(directory->directories, i);
-            hashSongs(newDir, hashArr);
+            sortSongs(newDir, dupArr);
         }
     }
     //actually do the song stuff
     if(directory->songs) {
-        int numSongs = dynarray_size(directory->songs);
-        for(i = 0; i < numSongs; i++){
+        for(i = 0; i < dynarray_size(directory->songs); i++){
             struct song* song = dynarray_get(directory->songs, i);
-            hashSong(song, directory->dirPath, hashArr);
+            sortSong(song, directory->dirPath, dupArr);
         }
     }
 }
 
-void consolidateDups(struct dynarray* hashArr) {
+void consolidateDups(struct dynarray* dupArr) {
     int i;
-    int n = dynarray_size(hashArr);
-    for (i = 0; i < n; i++) {
-        struct duplicate* dup = (struct duplicate*)dynarray_get(hashArr, i);
-
-        if (dup->num > 1) {
-            dynarray_remove(hashArr, i);
-            // free(dup->hash);
-            free(dup);
+    for (i = 0; i < dynarray_size(dupArr); i++) {
+        struct duplicate* dup = (struct duplicate*)dynarray_get(dupArr, i);
+        if (dynarray_size(dup->locations) == 1) {
+            dynarray_remove(dupArr, i);
+            freeDup(dup);
+            i--;
         }
     }
 }
@@ -125,9 +122,9 @@ struct dynarray* findDuplicates(struct directory* directory) {
         return NULL;
     }
     //get the array of hased songs
-    struct dynarray* hashArr = dynarray_create();
-    hashSongs(directory, hashArr);
+    struct dynarray* dupArr = dynarray_create();
+    sortSongs(directory, dupArr);
     //remove non-duplicates
-    consolidateDups(hashArr);
-    return hashArr;
+    consolidateDups(dupArr);
+    return dupArr;
 }

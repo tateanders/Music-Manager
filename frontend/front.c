@@ -200,12 +200,18 @@ struct dataToShow* mainFrontend(struct dataToShow* data, struct list* backList) 
             data->backPushed = 1;
             if (data->duplicates) {
                 freeDups(data->duplicates);
+                data->duplicates = NULL;
                 data->showDuplicates = 0;
             }
         }
         bId = Clay__HashString(CLAY_STRING("Add Tags"), 0);
         if (Clay_PointerOver(bId)) {
             data->tagsAdded = 1;
+            if (data->duplicates) {
+                freeDups(data->duplicates);
+                data->duplicates = NULL;
+                data->showDuplicates = 0;
+            }
         }
         bId = Clay__HashString(CLAY_STRING("Find Dups"), 0);
         if (Clay_PointerOver(bId)) {
@@ -213,7 +219,7 @@ struct dataToShow* mainFrontend(struct dataToShow* data, struct list* backList) 
         }
     }
     // Check if a user button was pushed
-    else if (data->dir && IsMouseButtonPressed(MOUSE_LEFT_BUTTON) && data->dir->directories){
+    if (data->dir && IsMouseButtonPressed(MOUSE_LEFT_BUTTON) && data->dir->directories){
         for (int i = 0; i < list_getNumElements(data->dir->directories); i++) {
             struct directory* tempDir = list_getElement(data->dir->directories, i);
             Clay_String dirName = buildClayString(tempDir->dirName);
