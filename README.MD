@@ -2,9 +2,9 @@
 
 Music Manager is a lightweight, interactive MP3 file manager with a GUI frontend built using **Raylib** and **Clay UI**.  
 
-It is designed to help DJs organize their music collection efficiently and prepare their files for **Serato** smart crates.  
+It is designed to help DJs organize their music collection efficiently and prepare their files for **Serato** smart crates and **Rekordbox** intelligent playlists.  
 
-This has only been tested on an ARM mac but should in theory work on Linux as well (let me know)
+This has only been tested on an ARM mac but should in theory work on Linux as well (let me know).
 
 #### **Note: this program edits the metadata of ID3v2.3 and ID3v2.4 mp3 files and will overwrite any current comments in your mp3 files.**
 ---
