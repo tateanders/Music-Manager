@@ -4,9 +4,9 @@ Music Manager is a lightweight, interactive MP3 file manager with a GUI frontend
 
 It is designed to help DJs organize their music collection efficiently and prepare their files for **Serato** smart crates.  
 
-This has only been tested on an ARM mac but should in theory work on Linux as well
+This has only been tested on an ARM mac but should in theory work on Linux as well (let me know)
 
-#### **Note: this program edits the metadata of ID3v2.3 and ID3v2.4 mp3 files and will overwrite any current comments you have.**
+#### **Note: this program edits the metadata of ID3v2.3 and ID3v2.4 mp3 files and will overwrite any current comments in your mp3 files.**
 ---
 
 ## Features
@@ -20,8 +20,12 @@ This has only been tested on an ARM mac but should in theory work on Linux as we
 
 - **Planned Features**  
   - Edit metadata such as **title** and **artist**.
-  - Find and remove duplicate files.
   - Remove metadata added by Serato to prepare files for re-analysis.
+
+- **Issues**  
+  - Does not handle foreign languages well.
+  - Could be more preformant.
+  - Wierd bugs where strings act very wrong randomly.
 
 ---
 
