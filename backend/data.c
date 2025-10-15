@@ -117,10 +117,7 @@ struct song* createSong(struct dirent* entry, char* dirPath, int updateMD){
     len = (strlen(song->fileName) - strlen(song->songName));
     song->fileType = (char*) calloc(len, sizeof(char));
     strcpy(song->fileType, dot + 1);
-    //truncate the name of the song
-    // char* newName = truncateString(song->songName);
-    // free(song->songName);
-    // song->songName = newName;
+    //replace the '_' with ' '
     replaceChars(song->songName);
     //add comments
     char* comment = NULL;
@@ -136,11 +133,6 @@ struct song* createSong(struct dirent* entry, char* dirPath, int updateMD){
     if (!song->artist) {
         song->artist = getSmallString();
     }
-
-    //debug prints
-    // printf("\nSize: %lu, SongName: %s\n", strlen(song->songName), song->songName);
-    // printf("Size: %lu, Title: %s\n", strlen(song->title), song->title);
-    // printf("Size: %lu, Artist: %s\n", strlen(song->artist), song->artist);
 
     return song;
 }

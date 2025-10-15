@@ -9,8 +9,6 @@
 #include "structures/list.h"
 #include "structures/dynarray.h"
 
-// #include "metadata.h"
-
 struct directory {
     char* dirName;
     char* dirPath;

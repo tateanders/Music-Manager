@@ -8,11 +8,7 @@
 -------------------------------------------------------------------------------------------------*/
 
 void HandleClayErrors(Clay_ErrorData errorData) {
-    // See the Clay_ErrorData struct for more information
     printf("%s", errorData.errorText.chars);
-    /*switch(errorData.errorType) {
-        // etc
-    }*/
 }
 
 /*-------------------------------------------------------------------------------------------------
@@ -28,30 +24,13 @@ void freeFonts(Font* fonts) {
 }
 
 /*-------------------------------------------------------------------------------------------------
-    Button interaction
--------------------------------------------------------------------------------------------------*/
-
-//sidebar buttons
-// uint32_t SelectedUserIndex = 0;
-
-// Clay_OnHover(HandleSidebarInteraction, i);
-// void HandleSidebarInteraction(Clay_ElementId elementId, Clay_PointerData pointerData, intptr_t userData){
-//     if (pointerData.state == CLAY_POINTER_DATA_PRESSED_THIS_FRAME){
-//         if (userData >= 0 && userData < user_arr.NumUsers){
-//             //select corresponding user
-//             SelectedUserIndex = userData;
-//         }
-//     }
-// };
-
-/*-------------------------------------------------------------------------------------------------
     Main Frontend
 -------------------------------------------------------------------------------------------------*/
 
 Font* initFrontend() {
     //make window resizable
-    int ScreenWidth = 1128;//GetScreenWidth();
-    int ScreenHeight = 705;//GetScreenHeight();
+    int ScreenWidth = 1128;
+    int ScreenHeight = 705;
     char* ScreenTitle = "Music Manager";
     Clay_Raylib_Initialize(ScreenWidth, ScreenHeight, ScreenTitle, FLAG_WINDOW_RESIZABLE);
 
@@ -72,7 +51,6 @@ Font* initFrontend() {
     fonts[GOTHIC] = LoadFontEx("resources/SpecialGothicExpandedOne-Regular.ttf", 48, 0, 400);
     fonts[JAKARTA] = LoadFontEx("resources/PlusJakartaSans-VariableFont_wght.ttf", 48, 0, 400);
     fonts[PLAYFAIR] = LoadFontEx("resources/PlayfairDisplay-VariableFont_wght.ttf", 48, 0, 400);
-    // fonts[OSWALD] = LoadFontEx("resources/Oswald-SemiBold.ttf", 48, 0, 400);
     fonts[OSWALD] = LoadFontEx("resources/CoralPixels-Regular.ttf", 48, 0, 400);
 
     //render text
@@ -80,21 +58,6 @@ Font* initFrontend() {
     Clay_SetMeasureTextFunction(Raylib_MeasureText, fonts);
 
     return fonts;
-}
-
-/*-------------------------------------------------------------------------------------------------
-    window should update function:
-    should eventuall also check:
-    if mouse is hovering over key areas
-    if window has been resized
-    if mouse is scolling
--------------------------------------------------------------------------------------------------*/
-
-int windowShouldUpdate() {
-    if (IsMouseButtonDown(0)) {
-        return 1;
-    }
-    return 0;
 }
 
 /*-------------------------------------------------------------------------------------------------
@@ -125,11 +88,9 @@ struct dataToShow* mainFrontend(struct dataToShow* data, struct list* backList) 
 
     //start build ui
     CLAY( CLAY_ID("OuterContainer"), {
-        // .id = CLAY_ID("OuterContainer"),
         .layout = {
-            .layoutDirection = CLAY_TOP_TO_BOTTOM,  // Stack Header on top of the main row
+            .layoutDirection = CLAY_TOP_TO_BOTTOM,
             .sizing = { CLAY_SIZING_GROW(0), CLAY_SIZING_GROW(0) },
-            //.padding = CLAY_PADDING_ALL(16),
             .childGap = 10
         },
         .backgroundColor = DARKMODE
@@ -137,18 +98,15 @@ struct dataToShow* mainFrontend(struct dataToShow* data, struct list* backList) 
         renderHeader(list_getNumElements(backList));
         // MAIN ROW: contains sidebar and main content
         CLAY( CLAY_ID("MainRow"), {
-            // .id = CLAY_ID("MainRow"),
             .layout = {
                 .layoutDirection = CLAY_LEFT_TO_RIGHT,
                 .sizing = { CLAY_SIZING_GROW(0), CLAY_SIZING_GROW(0) },
                 .childGap = 10
             },
-            //.backgroundColor = { 0, 0, 255, 255 }
         }){
     
             // SIDEBAR
             CLAY( CLAY_ID("SideBar"), {
-                // .id = CLAY_ID("SideBar"),
                 .layout = {
                     .layoutDirection = CLAY_TOP_TO_BOTTOM,
                     .sizing = { .width = CLAY_SIZING_FIXED(225), .height = CLAY_SIZING_GROW(0) },
@@ -162,7 +120,6 @@ struct dataToShow* mainFrontend(struct dataToShow* data, struct list* backList) 
     
             // MAIN CONTENT (empty for now)
             CLAY( CLAY_ID("MainContent"), {
-                // .id = CLAY_ID("MainContent"),
                 .clip = { .vertical = true, .childOffset = Clay_GetScrollOffset() },
                 .layout = {
                     .layoutDirection = CLAY_TOP_TO_BOTTOM,
@@ -170,7 +127,7 @@ struct dataToShow* mainFrontend(struct dataToShow* data, struct list* backList) 
                     .padding = CLAY_PADDING_ALL(10),
                     .childGap = 10,
                 },
-                .backgroundColor = BLUEGRAY,  // even darker bg
+                .backgroundColor = BLUEGRAY,
             }){
                 if(data->tagsAdded || data->findDups) {
                     renderDirHeader2();
@@ -227,7 +184,6 @@ struct dataToShow* mainFrontend(struct dataToShow* data, struct list* backList) 
             if (Clay_PointerOver(btnId)) {
                 list_insert(backList, data->dir);
                 data->dir = tempDir;
-                // data->dirPushed = 1;
                 break;
             }
         }

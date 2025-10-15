@@ -7,7 +7,6 @@
 #include "ID3v2dot4/editID3v2dot4.h"
 #include "data.h"
 
-// int addComment(struct dirent*, char*);
 int getSongData(struct dirent* entry, struct song* song, char* comment);
 
 #endif

@@ -23,7 +23,6 @@ struct dataToShow {
 -------------------------------------------------------------------------------------------------*/
 
 void freeFonts(Font* fonts);
-// struct directory* mainFrontend(Font*, struct directory*, int, int*);
 struct dataToShow* mainFrontend(struct dataToShow* data, struct list* backList);
 int windowShouldUpdate();
 Font* initFrontend();

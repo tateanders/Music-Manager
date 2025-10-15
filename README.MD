@@ -26,6 +26,9 @@ This has only been tested on an ARM mac but should in theory work on Linux as we
   - Does not handle foreign languages well.
   - Could be more preformant.
   - Wierd bugs where strings act very wrong randomly.
+  - Needs to use more const variables.
+  - Would like to have getters and setters for all structs.
+  - Want to move all button interaction into a function and have on header interaction.
 
 ---
 

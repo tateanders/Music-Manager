@@ -5,7 +5,7 @@
     helper functions
 -------------------------------------------------------------------------------------------------*/
 
-Clay_String buildClayString(const char* string) { /*static inline*/
+Clay_String buildClayString(const char* string) {
     Clay_String clayString;
     clayString.isStaticallyAllocated = false;
     clayString.length = (int32_t)strlen(string);
@@ -44,7 +44,7 @@ void renderHeader(int goBack) {
             .childAlignment = { .y = CLAY_ALIGN_Y_CENTER, .x = CLAY_ALIGN_X_CENTER},
             .layoutDirection = CLAY_LEFT_TO_RIGHT,
         },
-        .backgroundColor = GARNET  // dark grey
+        .backgroundColor = GARNET
     }){
         if (goBack) {
             renderBackButton();
@@ -71,7 +71,7 @@ void renderDup(struct duplicate* dup, int pos) {
         .layout = { 
             .sizing = { 
                 .width = CLAY_SIZING_GROW(0),
-                .height = CLAY_SIZING_GROW(0) // Explicit height
+                .height = CLAY_SIZING_GROW(0)
             },
             .padding = CLAY_PADDING_ALL(16),
             .childAlignment = { CLAY_ALIGN_X_CENTER, CLAY_ALIGN_Y_CENTER },
@@ -110,7 +110,7 @@ void renderDupHeader(Clay_String text) {
         .layout = { 
             .sizing = { 
                 .width = CLAY_SIZING_GROW(0),
-                .height = CLAY_SIZING_FIXED(60) // Explicit height
+                .height = CLAY_SIZING_FIXED(60)
             },
             .padding = CLAY_PADDING_ALL(16),
             .childAlignment = { CLAY_ALIGN_X_CENTER, CLAY_ALIGN_Y_CENTER } 
@@ -150,10 +150,9 @@ void renderDups(struct dynarray* duplicates) {
 -------------------------------------------------------------------------------------------------*/
 
 void renderSongButton(struct song* song, int pos) {
-    // Create unique ID for each button
     Clay_String songName = buildClayString(song->songName);
     Clay_ElementId songId = Clay__HashString(songName, pos);
-    // Get the artist and song
+    //get the artist and song
     Clay_String title;
     if ((strcmp(song->title, "--") && strcmp(song->artist, "--")) == 0) {
         title = buildClayString(song->songName);
@@ -163,11 +162,10 @@ void renderSongButton(struct song* song, int pos) {
     Clay_String artist = buildClayString(song->artist);
     //print shit
     CLAY(songId, {
-        // .id = dirId,
         .layout = { 
             .sizing = { 
                 .width = CLAY_SIZING_GROW(0),
-                .height = CLAY_SIZING_GROW(0) // Explicit height
+                .height = CLAY_SIZING_GROW(0)
             },
             .padding = CLAY_PADDING_ALL(16),
             .childAlignment = { CLAY_ALIGN_X_CENTER, CLAY_ALIGN_Y_CENTER },
@@ -196,11 +194,10 @@ void renderDirButton(struct directory* dir, int pos) {
     Clay_ElementId dirId = Clay__HashString(text, pos);
     
     CLAY( dirId, {
-        // .id = dirId,
         .layout = { 
             .sizing = { 
                 .width = CLAY_SIZING_GROW(0),
-                .height = CLAY_SIZING_FIXED(60) // Explicit height
+                .height = CLAY_SIZING_FIXED(60)
             },
             .padding = CLAY_PADDING_ALL(16),
             .childAlignment = { CLAY_ALIGN_X_CENTER, CLAY_ALIGN_Y_CENTER } 
@@ -221,7 +218,6 @@ void renderDirButton(struct directory* dir, int pos) {
 -------------------------------------------------------------------------------------------------*/
 
 void renderDirHeader(struct directory* dir, int pos) {
-    // Create unique ID for each button
     Clay_String text = buildClayString(dir->dirPath);
     Clay_ElementId dirId = Clay__HashString(text, pos);
     
@@ -229,7 +225,7 @@ void renderDirHeader(struct directory* dir, int pos) {
         .layout = { 
             .sizing = { 
                 .width = CLAY_SIZING_GROW(0),
-                .height = CLAY_SIZING_FIXED(60) // Explicit height
+                .height = CLAY_SIZING_FIXED(60)
             },
             .padding = CLAY_PADDING_ALL(16),
             .childAlignment = { CLAY_ALIGN_X_CENTER, CLAY_ALIGN_Y_CENTER } 
@@ -250,7 +246,7 @@ void renderDirHeader2() {
         .layout = { 
             .sizing = { 
                 .width = CLAY_SIZING_GROW(0),
-                .height = CLAY_SIZING_FIXED(60) // Explicit height
+                .height = CLAY_SIZING_FIXED(60)
             },
             .padding = CLAY_PADDING_ALL(16),
             .childAlignment = { CLAY_ALIGN_X_CENTER, CLAY_ALIGN_Y_CENTER } 
@@ -301,7 +297,6 @@ void renderDirectory(struct directory* dir) {
 void renderGreenButton() {
     Clay_ElementId bId = Clay__HashString(CLAY_STRING("x"), 0);
     CLAY( bId, {
-        // .id = bId,
         .layout = {
             .childAlignment = { CLAY_ALIGN_X_CENTER, CLAY_ALIGN_Y_CENTER },
             .sizing = { CLAY_SIZING_GROW(0), CLAY_SIZING_FIXED(75) },
@@ -321,7 +316,6 @@ void renderSidebarButton(Clay_String text) {
     Clay_ElementId bId = Clay__HashString(text, 0);
     bId = Clay__HashString(text, 0);
     CLAY( bId, {
-        // .id = bId,
         .layout = {
             .childAlignment = { CLAY_ALIGN_X_CENTER, CLAY_ALIGN_Y_CENTER },
             .sizing = { CLAY_SIZING_GROW(0), CLAY_SIZING_FIXED(75) },
