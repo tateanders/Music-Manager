@@ -6,7 +6,7 @@ int main() {
     data->fonts = initFrontend();
 
     //get the music
-    struct directory* OGDir = getMusic("Mp3", 0);
+    struct directory* OGDir = getMusic("Mp3", data->tagsAdded);
     data->dir = OGDir;
 
     //back button stuff
@@ -15,30 +15,34 @@ int main() {
     //run the frontend
     while (!WindowShouldClose()) {
         mainFrontend(data, backList);
+
         if (data->backPushed) {
+
             //if the back button got pushed
             data->dir = list_pop(backList);
             data->backPushed = 0;
         } else if (data->tagsAdded) {
+
             //add tags
             //bin stuff
             list_free(backList);
             mainFrontend(data, backList);
             freeDirectory(OGDir);
             //get stuff back
-            OGDir = getMusic("Mp3", 1);
+            OGDir = getMusic("Mp3", data->tagsAdded);
             data->dir = OGDir;
             backList = list_create();
             data->tagsAdded = 0;
             mainFrontend(data, backList);
         } else if (data->findDups) {
+
             //find duplicates
             //bin stuff
             list_free(backList);
             mainFrontend(data, backList);
             freeDirectory(OGDir);
             //get stuff back
-            OGDir = getMusic("Mp3", 0);
+            OGDir = getMusic("Mp3", data->tagsAdded);
             data->dir = OGDir;
             backList = list_create();
             list_insert(backList, data->dir);
