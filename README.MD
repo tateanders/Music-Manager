@@ -18,17 +18,21 @@ This has only been tested on an ARM mac but should in theory work on Linux as we
   A button labeled **"Add Tags"** automatically adds a comment to each MP3 file containing the file path relative to the root `mp3` directory.  
   This is compatible with Serato smart crates for automatic sorting.
 
+- **Find Duplicates**  
+  A button labeled **"Find Dups"** uses djb2 hashing to find all duplicate songs and their locations in the root `mp3` directory.  
+
 - **Planned Features**  
   - Edit metadata such as **title** and **artist**.
   - Remove metadata added by Serato to prepare files for re-analysis.
+  - Support for mutiple alphabets.
+  - Some way to mark remixes of songs.
 
 - **Issues**  
-  - Does not handle foreign languages well.
-  - Could be more preformant.
+  - Could be more performant.
   - Wierd bugs where strings act very wrong randomly.
   - Needs to use more const variables.
   - Would like to have getters and setters for all structs.
-  - Want to move all button interaction into a function and have on header interaction.
+  - Want to move all button interaction into a function and have on hover interaction.
 
 ---
 

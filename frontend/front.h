@@ -11,11 +11,8 @@
 struct dataToShow {
     Font* fonts;
     struct directory* dir;
-    int tagsAdded;
-    int findDups;
-    int backPushed;
+    int info[4];
     struct dynarray* duplicates;
-    int showDuplicates;
 };
 
 /*-------------------------------------------------------------------------------------------------

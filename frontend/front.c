@@ -115,7 +115,7 @@ struct dataToShow* mainFrontend(struct dataToShow* data, struct list* backList) 
                 },
                 .backgroundColor = OLDGOLD
             }){
-                renderSidebarButtons(data->tagsAdded, data->findDups);
+                renderSidebarButtons(data->info[TAGS], data->info[FINDDUPS]);
             }
     
             // MAIN CONTENT (empty for now)
@@ -129,9 +129,9 @@ struct dataToShow* mainFrontend(struct dataToShow* data, struct list* backList) 
                 },
                 .backgroundColor = BLUEGRAY,
             }){
-                if(data->tagsAdded || data->findDups) {
+                if(data->info[TAGS] || data->info[FINDDUPS]) {
                     renderDirHeader2();
-                } else if (data->showDuplicates) {
+                } else if (data->info[SHOWDUPS]) {
                     renderDups(data->duplicates);
                 } else {
                     renderDirectory(data->dir);
@@ -154,25 +154,25 @@ struct dataToShow* mainFrontend(struct dataToShow* data, struct list* backList) 
     if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)){
         Clay_ElementId bId = Clay__HashString(CLAY_STRING("Back Button Container"), 0);
         if (Clay_PointerOver(bId)) {
-            data->backPushed = 1;
+            data->info[BACK] = 1;
             if (data->duplicates) {
                 freeDups(data->duplicates);
                 data->duplicates = NULL;
-                data->showDuplicates = 0;
+                data->info[SHOWDUPS] = 0;
             }
         }
         bId = Clay__HashString(CLAY_STRING("Add Tags"), 0);
         if (Clay_PointerOver(bId)) {
-            data->tagsAdded = 1;
+            data->info[TAGS] = 1;
             if (data->duplicates) {
                 freeDups(data->duplicates);
                 data->duplicates = NULL;
-                data->showDuplicates = 0;
+                data->info[SHOWDUPS] = 0;
             }
         }
         bId = Clay__HashString(CLAY_STRING("Find Dups"), 0);
         if (Clay_PointerOver(bId)) {
-            data->findDups = 1;
+            data->info[FINDDUPS] = 1;
         }
     }
     // Check if a user button was pushed

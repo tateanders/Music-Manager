@@ -6,7 +6,7 @@ int main() {
     data->fonts = initFrontend();
 
     //get the music
-    struct directory* OGDir = getMusic("Mp3", data->tagsAdded);
+    struct directory* OGDir = getMusic("Mp3", data->info[TAGS]);
     data->dir = OGDir;
 
     //back button stuff
@@ -16,12 +16,12 @@ int main() {
     while (!WindowShouldClose()) {
         mainFrontend(data, backList);
 
-        if (data->backPushed) {
+        if (data->info[BACK]) {
 
             //if the back button got pushed
             data->dir = list_pop(backList);
-            data->backPushed = 0;
-        } else if (data->tagsAdded) {
+            data->info[BACK] = 0;
+        } else if (data->info[TAGS]) {
 
             //add tags
             //bin stuff
@@ -29,12 +29,12 @@ int main() {
             mainFrontend(data, backList);
             freeDirectory(OGDir);
             //get stuff back
-            OGDir = getMusic("Mp3", data->tagsAdded);
+            OGDir = getMusic("Mp3", data->info[TAGS]);
             data->dir = OGDir;
             backList = list_create();
-            data->tagsAdded = 0;
+            data->info[TAGS] = 0;
             mainFrontend(data, backList);
-        } else if (data->findDups) {
+        } else if (data->info[FINDDUPS]) {
 
             //find duplicates
             //bin stuff
@@ -42,14 +42,14 @@ int main() {
             mainFrontend(data, backList);
             freeDirectory(OGDir);
             //get stuff back
-            OGDir = getMusic("Mp3", data->tagsAdded);
+            OGDir = getMusic("Mp3", data->info[TAGS]);
             data->dir = OGDir;
             backList = list_create();
             list_insert(backList, data->dir);
-            data->findDups = 0;
+            data->info[FINDDUPS] = 0;
             //do stuff
             data->duplicates = findDuplicates(data->dir);
-            data->showDuplicates = 1;
+            data->info[SHOWDUPS] = 1;
             mainFrontend(data, backList);
         }
     }

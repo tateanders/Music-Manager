@@ -12,6 +12,12 @@ extern const int JAKARTA;
 extern const int PLAYFAIR;
 extern const int OSWALD;
 
+//info to show
+extern const int TAGS;
+extern const int FINDDUPS;
+extern const int BACK;
+extern const int SHOWDUPS;
+
 //colors
 extern const Clay_Color DARKMODE;
 extern const Clay_Color GARNET;

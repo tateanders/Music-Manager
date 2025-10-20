@@ -10,6 +10,11 @@ const int JAKARTA = 1;
 const int PLAYFAIR = 2;
 const int OSWALD = 3;
 
+const int TAGS = 0;
+const int FINDDUPS = 1;
+const int BACK = 2;
+const int SHOWDUPS = 3;
+
 //colors
 const Clay_Color DARKMODE = (Clay_Color) {36, 36, 36, 255};
 const Clay_Color GARNET = (Clay_Color) {121, 36, 47, 255};
