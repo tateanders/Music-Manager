@@ -59,20 +59,39 @@ void freeDirectory(struct directory* directory){
     Helper functions
 -------------------------------------------------------------------------------------------------*/
 
-DIR* openMusicDir(char* music){
-    //make sure we are in desktop
-    char cwd[PATH_MAX];
+char* getWorkingDir() {
+    static char cwd[PATH_MAX];  // static so it persists after the function returns
     getcwd(cwd, sizeof(cwd));
-    //gave up dont care will fix *eventually*
 
+    char *lastSlash = strrchr(cwd, '/');
+    if (lastSlash && *(lastSlash + 1) != '\0') {
+        return lastSlash + 1;  // return everything after the last '/'
+    } else {
+        return cwd;  // fallback if no slash found
+    }
+}
+
+DIR* openMusicDir(char* music){
+    char cwp[PATH_MAX];  // static so it persists after the function returns
+    getcwd(cwp, sizeof(cwp));
+
+    //if we have to go back to the desktop
+    if (strstr(cwp, "Desktop") != NULL) {
+        char* cwd = getWorkingDir();
+        while(strcmp(cwd, "Desktop") != 0) {
+            chdir("..");
+            cwd = getWorkingDir();
+        }
+    } else {
+        //if we have to go forward
+        chdir("Desktop");
+    }
+
+    //open the directory
     DIR* musicDir = opendir(music);
     if (!musicDir) {
-        chdir("Desktop");
-        musicDir = opendir(music);
-        if (!musicDir) {
-            perror("no \"music\" directory found on desktop\n");
-            exit(1);
-        }
+        perror("no \"mp3\" directory found on desktop\n");
+        exit(1);
     }
     chdir(music);
     return musicDir; 
@@ -261,8 +280,6 @@ void printDirectory(struct directory* directory, int numSpaces){
 
 struct directory* getMusic(char* musicDirName, int updateMD) {
     //enter music directory
-    chdir("..");
-    chdir("..");
     DIR* musicDir = openMusicDir(musicDirName); 
 
     //get contents of music directory
