@@ -6,9 +6,8 @@
 
 //define the font names
 const int GOTHIC = 0;
-const int JAKARTA = 1;
-const int PLAYFAIR = 2;
-const int OSWALD = 3;
+const int NOTO = 1;
+const int NOTOI = 2;
 
 const int TAGS = 0;
 const int FINDDUPS = 1;

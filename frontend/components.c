@@ -176,12 +176,12 @@ void renderSongButton(struct song* song, int pos) {
     }) {
         CLAY_TEXT(title, CLAY_TEXT_CONFIG({ 
             .wrapMode = CLAY_TEXT_WRAP_WORDS,
-            .fontId = GOTHIC, 
+            .fontId = NOTO, 
             .fontSize = 40, 
             .textColor = GARNET
         }));
         CLAY_TEXT(artist, CLAY_TEXT_CONFIG({ 
-            .fontId = GOTHIC, 
+            .fontId = NOTOI, 
             .fontSize = 30, 
             .textColor = GARNET
         }));

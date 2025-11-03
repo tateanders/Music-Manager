@@ -8,9 +8,8 @@
 
 //define the font names
 extern const int GOTHIC;
-extern const int JAKARTA;
-extern const int PLAYFAIR;
-extern const int OSWALD;
+extern const int NOTO;
+extern const int NOTOI;
 
 //info to show
 extern const int TAGS;

@@ -26,8 +26,91 @@ int getID3v(FILE* file) {
 }
 
 /*-------------------------------------------------------------------------------------------------
+    Conversions to utf8
+-------------------------------------------------------------------------------------------------*/
+
+int checkISO(const uint8_t* data) {
+    if(data[0] == 0) {
+        return 1;
+    }
+    return 0;
+}
+
+int checkUTF16(const uint8_t* data) {
+    if(data[0] == 1) {
+        return 1;
+    }
+    return 0;
+}
+
+void ISO_UTF8(const uint8_t* data, const size_t dataSize, char* title) {
+    if (!data || !title) return;
+
+    char* out = title;
+    for (size_t i = 0; i < dataSize; i++) {
+        unsigned char c = data[i];
+        if (c < 0x80) {
+            *out++ = c;
+        } else {
+            *out++ = 0xC0 | (c >> 6);
+            *out++ = 0x80 | (c & 0x3F);
+        }
+    }
+    *out = '\0';
+}
+
+void UTF16_UTF8(const uint8_t* data, size_t dataSize, char* title) {
+    if (!data || !title || dataSize < 2) return;
+
+    // Detect BOM
+    int littleEndian = 1;
+    if (data[0] == 0xFE && data[1] == 0xFF) {
+        littleEndian = 0;  // Big-endian
+        data += 2;
+        dataSize -= 2;
+    } else if (data[0] == 0xFF && data[1] == 0xFE) {
+        littleEndian = 1;  // Little-endian
+        data += 2;
+        dataSize -= 2;
+    }
+
+    size_t utf16Len = dataSize / 2;
+    const uint16_t* utf16 = (const uint16_t*)data;
+
+    char* out = title;
+
+    for (size_t i = 0; i < utf16Len; i++) {
+        uint16_t code = littleEndian ? utf16[i] : (utf16[i] >> 8) | (utf16[i] << 8);
+
+        if (code <= 0x7F) {
+            *out++ = (char)code;
+        } else if (code <= 0x7FF) {
+            *out++ = 0xC0 | ((code >> 6) & 0x1F);
+            *out++ = 0x80 | (code & 0x3F);
+        } else {
+            *out++ = 0xE0 | ((code >> 12) & 0x0F);
+            *out++ = 0x80 | ((code >> 6) & 0x3F);
+            *out++ = 0x80 | (code & 0x3F);
+        }
+    }
+    *out = '\0';
+}
+
+/*-------------------------------------------------------------------------------------------------
     Get title and artist functions
 -------------------------------------------------------------------------------------------------*/
+
+void constructUTF8(const uint8_t* data, size_t dataSize, char* title) {
+    if (checkISO(data)) {
+        //if the encoding is ISO-8859-1:
+        ISO_UTF8(data + 1, dataSize - 1, title);
+    } else if (checkUTF16(data)){
+        //if the encoding is UTF16
+        UTF16_UTF8(data + 1, dataSize - 1, title);
+    } else {
+        memcpy(title, data + 1, (size_t)dataSize - 1);
+    }
+}
 
 char* v2dot3Title(const struct ID3v2dot3MetaData* data) {
     int i;
@@ -36,8 +119,8 @@ char* v2dot3Title(const struct ID3v2dot3MetaData* data) {
     for (i = 0; i < daSize; i++) {
         struct ID3v2dot3Frame* frame = (struct ID3v2dot3Frame*)dynarray_get(data->frames, i);
         if (strncmp("TIT2", frame->id, 4) == 0) {
-            title = calloc((size_t)frame->size, sizeof(char));
-            memcpy(title, frame->data + 1, (size_t)frame->size - 1);
+            title = calloc((size_t)(3 * (frame->size / 2)), sizeof(char));
+            constructUTF8(frame->data, frame->size, title);
             break;
         }
     }
@@ -51,8 +134,8 @@ char* v2dot3Artist(const struct ID3v2dot3MetaData* data) {
     for (i = 0; i < daSize; i++) {
         struct ID3v2dot3Frame* frame = (struct ID3v2dot3Frame*)dynarray_get(data->frames, i);
         if (strncmp("TPE1", frame->id, 4) == 0) {
-            artist = calloc((size_t)frame->size, sizeof(char));
-            memcpy(artist, frame->data + 1, (size_t)frame->size - 1);
+            artist = calloc((size_t)(3 * (frame->size / 2)), sizeof(char));
+            constructUTF8(frame->data, frame->size, artist);
             break;
         }
     }
@@ -66,8 +149,8 @@ char* v2dot4Title(const struct ID3v2dot4MetaData* data) {
     for (i = 0; i < daSize; i++) {
         struct ID3v2dot4Frame* frame = (struct ID3v2dot4Frame*)dynarray_get(data->frames, i);
         if (strncmp("TIT2", frame->id, 4) == 0) {
-            title = calloc((size_t)frame->size, sizeof(char));
-            memcpy(title, frame->data + 1, (size_t)frame->size - 1);
+            title = calloc((size_t)(3 * (frame->size / 2)), sizeof(char));
+            constructUTF8(frame->data, frame->size, title);
             break;
         }
     }
@@ -81,8 +164,8 @@ char* v2dot4Artist(const struct ID3v2dot4MetaData* data) {
     for (i = 0; i < daSize; i++) {
         struct ID3v2dot4Frame* frame = (struct ID3v2dot4Frame*)dynarray_get(data->frames, i);
         if (strncmp("TPE1", frame->id, 4) == 0) {
-            artist = calloc((size_t)frame->size, sizeof(char));
-            memcpy(artist, frame->data + 1, (size_t)frame->size - 1);
+            artist = calloc((size_t)(3 * (frame->size / 2)), sizeof(char));
+            constructUTF8(frame->data, frame->size, artist);
             break;
         }
     }

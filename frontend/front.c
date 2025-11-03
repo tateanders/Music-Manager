@@ -2,6 +2,9 @@
 #include "front.h"
 #include "clay_renderer_raylib.c"
 #include "components.h"
+#include "GOTHIC.c"
+#include "NOTO.c"
+#include "NOTOI.c"
 
 /*-------------------------------------------------------------------------------------------------
     Error handler
@@ -17,9 +20,8 @@ void HandleClayErrors(Clay_ErrorData errorData) {
 
 void freeFonts(Font* fonts) {
     UnloadFont(fonts[GOTHIC]);
-    UnloadFont(fonts[JAKARTA]);
-    UnloadFont(fonts[PLAYFAIR]);
-    UnloadFont(fonts[OSWALD]);
+    UnloadFont(fonts[NOTO]);
+    UnloadFont(fonts[NOTOI]);
     free(fonts);
 }
 
@@ -47,11 +49,13 @@ Font* initFrontend() {
     }, (Clay_ErrorHandler) { HandleClayErrors });
 
     //set up font arrays
-    Font* fonts = calloc(4, sizeof(Font));
-    fonts[GOTHIC] = LoadFontEx("resources/SpecialGothicExpandedOne-Regular.ttf", 48, 0, 400);
-    fonts[JAKARTA] = LoadFontEx("resources/PlusJakartaSans-VariableFont_wght.ttf", 48, 0, 400);
-    fonts[PLAYFAIR] = LoadFontEx("resources/PlayfairDisplay-VariableFont_wght.ttf", 48, 0, 400);
-    fonts[OSWALD] = LoadFontEx("resources/CoralPixels-Regular.ttf", 48, 0, 400);
+    Font* fonts = calloc(3, sizeof(Font));
+    fonts[GOTHIC] = LoadFontFromMemory(".ttf", SpecialGothicExpandedOne, SpecialGothicExpandedOne_len, 48, 0, 0);
+    SetTextureFilter(fonts[GOTHIC].texture, TEXTURE_FILTER_BILINEAR);
+    fonts[NOTO] = LoadFontFromMemory(".ttf", NotoSans_Bold_ttf, NotoSans_Bold_ttf_len, 48, 0, 0);
+    SetTextureFilter(fonts[NOTO].texture, TEXTURE_FILTER_BILINEAR);
+    fonts[NOTOI] = LoadFontFromMemory(".ttf", NotoSans_BoldItalic_ttf, NotoSans_BoldItalic_ttf_len, 48, 0, 0);
+    SetTextureFilter(fonts[NOTOI].texture, TEXTURE_FILTER_BILINEAR);
 
     //render text
     SetTextureFilter(fonts[GOTHIC].texture, TEXTURE_FILTER_BILINEAR);

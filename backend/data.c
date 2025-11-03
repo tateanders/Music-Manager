@@ -292,5 +292,7 @@ struct directory* getMusic(char* musicDirName, int updateMD) {
     }
     closedir(musicDir);
 
+    // printNums();
+
     return music;
 }

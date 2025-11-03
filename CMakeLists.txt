@@ -30,11 +30,16 @@ link_directories(/opt/homebrew/lib)
 
 # Define sources
 set(CLAY_SOURCES
+    # main
     src/main.c
+    # renderer/clay
+    renderers/raylib/clay_renderer_raylib.h
     clay/clay.h
+    # frontend
     frontend/front.c
     frontend/components.c
     frontend/globals.c
+    # backend
     backend/data.c
     backend/duplicates.c
     backend/metadata.c
@@ -44,8 +49,6 @@ set(CLAY_SOURCES
     backend/ID3v2dot4/readID3v2dot4.c
     backend/structures/dynarray.c
     backend/structures/list.c
-    renderers/raylib/clay_renderer_raylib.h
-    resources/SpecialGothicExpandedOne-Regular.ttf
 )
 
 # Create the executable
