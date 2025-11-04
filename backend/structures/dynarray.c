@@ -22,7 +22,7 @@ struct dynarray {
 struct dynarray* dynarray_create() {
 	struct dynarray* arr = calloc(1, sizeof(struct dynarray));
 	assert(arr);
-	arr->data = calloc(2, sizeof(void*));
+	arr->data = (void**)calloc(2, sizeof(void*));
 	assert(arr->data);
 	arr->capacity = 2;
 	arr->size = 0;
@@ -41,18 +41,19 @@ void dynarray_free(struct dynarray* arr) {
 
 void dynarray_push(struct dynarray* arr, void* val) {
 	assert(arr);
-	if(arr->size == arr->capacity){
+	if (arr->size == arr->capacity) {
 		arr->capacity *= 2;
 		arr->data = realloc(arr->data, arr->capacity * sizeof(void*));
+		assert(arr->data);
 	}
 
-	arr->size += 1;
-	int i;
-	for (i = arr->size; i > 0; i--) {
+	// shift elements right
+	for (int i = arr->size; i > 0; i--) {
 		arr->data[i] = arr->data[i - 1];
 	}
 
 	arr->data[0] = val;
+	arr->size += 1;
 }
 
 void dynarray_insert(struct dynarray* arr, void* val) {

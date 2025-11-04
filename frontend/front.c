@@ -182,9 +182,8 @@ struct dataToShow* mainFrontend(struct dataToShow* data, struct list* backList) 
     // Check if a user button was pushed
     if (data->dir && IsMouseButtonPressed(MOUSE_LEFT_BUTTON) && data->dir->directories){
         for (int i = 0; i < list_getNumElements(data->dir->directories); i++) {
-            struct directory* tempDir = list_getElement(data->dir->directories, i);
-            Clay_String dirName = buildClayString(tempDir->dirName);
-            Clay_ElementId btnId = Clay__HashString(dirName, i);
+            struct clayDirectory* tempDir = list_getElement(data->dir->directories, i);
+            Clay_ElementId btnId = Clay__HashString(*tempDir->dirName, i);
             if (Clay_PointerOver(btnId)) {
                 list_insert(backList, data->dir);
                 data->dir = tempDir;
