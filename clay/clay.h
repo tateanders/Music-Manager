@@ -199,7 +199,6 @@ typedef struct Clay_String {
     int32_t length;
     // The underlying character memory. Note: this will not be copied and will not extend the lifetime of the underlying memory.
     const char *chars;
-    char* mutChars;
 } Clay_String;
 
 // Clay_StringSlice is used to represent non owning string slices, and includes

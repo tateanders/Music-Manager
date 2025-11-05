@@ -82,7 +82,7 @@ void renderDup(struct duplicate* dup, int pos) {
     }) {
         CLAY_TEXT(title, CLAY_TEXT_CONFIG({ 
             .wrapMode = CLAY_TEXT_WRAP_WORDS,
-            .fontId = NOTO, 
+            .fontId = GOTHIC, 
             .fontSize = 40, 
             .textColor = GARNET
         }));
@@ -149,13 +149,17 @@ void renderDups(struct dynarray* duplicates) {
     render song and directory buttons
 -------------------------------------------------------------------------------------------------*/
 
-void renderSongButton(struct claySong* song, int pos) {
-    Clay_ElementId songId = Clay__HashString(*song->title, pos);
+void renderSongButton(struct song* song, int pos) {
+    Clay_String songName = buildClayString(song->songName);
+    Clay_ElementId songId = Clay__HashString(songName, pos);
+    //get the artist and song
+    Clay_String title = buildClayString(song->title);
+    Clay_String artist = buildClayString(song->artist);
+    //print shit
     CLAY(songId, {
         .layout = { 
             .sizing = { 
-                .width = CLAY_SIZING_GROW(0),
-                .height = CLAY_SIZING_GROW(0)
+                .width = CLAY_SIZING_PERCENT(1), .height = CLAY_SIZING_GROW(0)
             },
             .padding = CLAY_PADDING_ALL(16),
             .childAlignment = { CLAY_ALIGN_X_CENTER, CLAY_ALIGN_Y_CENTER },
@@ -164,13 +168,13 @@ void renderSongButton(struct claySong* song, int pos) {
         .backgroundColor = OLDGOLD,
         .cornerRadius = 8,
     }) {
-        CLAY_TEXT(*song->title, CLAY_TEXT_CONFIG({ 
+        CLAY_TEXT(title, CLAY_TEXT_CONFIG({ 
             .wrapMode = CLAY_TEXT_WRAP_WORDS,
             .fontId = NOTO, 
             .fontSize = 40, 
             .textColor = GARNET
         }));
-        CLAY_TEXT(*song->artist, CLAY_TEXT_CONFIG({ 
+        CLAY_TEXT(artist, CLAY_TEXT_CONFIG({ 
             .fontId = NOTOI, 
             .fontSize = 30, 
             .textColor = GARNET
@@ -178,9 +182,10 @@ void renderSongButton(struct claySong* song, int pos) {
     }
 }
 
-void renderDirButton(struct clayDirectory* dir, int pos) {
+void renderDirButton(struct directory* dir, int pos) {
     // Create unique ID for each button
-    Clay_ElementId dirId = Clay__HashString(*dir->dirName, pos);
+    Clay_String text = buildClayString(dir->dirName);
+    Clay_ElementId dirId = Clay__HashString(text, pos);
     
     CLAY( dirId, {
         .layout = { 
@@ -194,7 +199,7 @@ void renderDirButton(struct clayDirectory* dir, int pos) {
         .backgroundColor = GARNET,
         .cornerRadius = 8,
     }) {
-        CLAY_TEXT(*dir->dirName, CLAY_TEXT_CONFIG({ 
+        CLAY_TEXT(text, CLAY_TEXT_CONFIG({ 
             .fontId = GOTHIC, 
             .fontSize = 40, 
             .textColor = OLDGOLD
@@ -206,8 +211,9 @@ void renderDirButton(struct clayDirectory* dir, int pos) {
     render directory header
 -------------------------------------------------------------------------------------------------*/
 
-void renderDirHeader(struct clayDirectory* dir, int pos) {
-    Clay_ElementId dirId = Clay__HashString(*dir->dirPath, pos);
+void renderDirHeader(struct directory* dir, int pos) {
+    Clay_String text = buildClayString(dir->dirPath);
+    Clay_ElementId dirId = Clay__HashString(text, pos);
     
     CLAY( dirId, {
         .layout = { 
@@ -221,7 +227,7 @@ void renderDirHeader(struct clayDirectory* dir, int pos) {
         .backgroundColor = BLUEGRAY,
         .cornerRadius = 8,
     }) {
-        CLAY_TEXT(*dir->dirPath, CLAY_TEXT_CONFIG({ 
+        CLAY_TEXT(text, CLAY_TEXT_CONFIG({ 
             .fontId = GOTHIC, 
             .fontSize = 40, 
             .textColor = OLDGOLD
@@ -254,7 +260,7 @@ void renderDirHeader2() {
     render the full directory
 -------------------------------------------------------------------------------------------------*/
 
-void renderDirectory(struct clayDirectory* dir) {
+void renderDirectory(struct directory* dir) {
     int i;
     int pos = 0;
     renderDirHeader(dir, pos);
@@ -262,7 +268,7 @@ void renderDirectory(struct clayDirectory* dir) {
     if (dir->directories) {
         struct list* directories = dir->directories;
         for (i = 0; i < list_getNumElements(directories); i++) {
-            struct clayDirectory* dirButton = (struct clayDirectory*)list_getElement(directories, i);
+            struct directory* dirButton = (struct directory*)list_getElement(directories, i);
             renderDirButton(dirButton, pos);
             pos++;
         }
@@ -271,7 +277,7 @@ void renderDirectory(struct clayDirectory* dir) {
     if (dir->songs) {
         struct dynarray* songs = dir->songs;
         for (i = 0; i < dynarray_size(songs); i++){
-            struct claySong* song = dynarray_get(songs, i);
+            struct song* song = dynarray_get(songs, i);
             renderSongButton(song,pos);
             pos++;
         }

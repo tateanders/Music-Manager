@@ -24,4 +24,8 @@ extern const Clay_Color BLUEGRAY;
 extern const Clay_Color OLDGOLD;
 extern const Clay_Color GREENS;
 
+extern const Clay_Color _BLACK;
+extern const Clay_Color _LESSBLACK;
+extern const Clay_Color _GRAY;
+
 #endif

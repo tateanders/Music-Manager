@@ -19,7 +19,7 @@ struct directory {
 struct song {
     char* songName;
     char* fileName;
-    char* fileType;
+    // char* fileType;
     char* title;
     char* artist;
 };

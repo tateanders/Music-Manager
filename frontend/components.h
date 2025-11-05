@@ -7,9 +7,9 @@
 
 Clay_String buildClayString(const char* string);
 void renderHeader(int);
-void renderSongButton(struct claySong* song, int pos);
-void renderDirButton(struct clayDirectory* dir, int pos);
-void renderDirectory(struct clayDirectory* dir);
+void renderSongButton(struct song* song, int pos);
+void renderDirButton(struct directory* dir, int pos);
+void renderDirectory(struct directory* dir);
 void renderSidebarButtons(int tags, int dups);
 void renderDirHeader2();
 void renderDups(struct dynarray* duplicates);

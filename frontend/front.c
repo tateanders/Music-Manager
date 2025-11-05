@@ -2,9 +2,9 @@
 #include "front.h"
 #include "clay_renderer_raylib.c"
 #include "components.h"
-#include "GOTHIC.c"
-#include "NOTO.c"
-#include "NOTOI.c"
+#include "resources/GOTHIC.c"
+#include "resources/NOTO.c"
+#include "resources/NOTOI.c"
 
 /*-------------------------------------------------------------------------------------------------
     Error handler
@@ -97,14 +97,14 @@ struct dataToShow* mainFrontend(struct dataToShow* data, struct list* backList) 
             .sizing = { CLAY_SIZING_GROW(0), CLAY_SIZING_GROW(0) },
             .childGap = 10
         },
-        .backgroundColor = DARKMODE
+        .backgroundColor = _BLACK
     }){
         renderHeader(list_getNumElements(backList));
         // MAIN ROW: contains sidebar and main content
         CLAY( CLAY_ID("MainRow"), {
             .layout = {
                 .layoutDirection = CLAY_LEFT_TO_RIGHT,
-                .sizing = { CLAY_SIZING_GROW(0), CLAY_SIZING_GROW(0) },
+                .sizing = { CLAY_SIZING_PERCENT(1), CLAY_SIZING_GROW(0) },
                 .childGap = 10
             },
         }){
@@ -113,11 +113,11 @@ struct dataToShow* mainFrontend(struct dataToShow* data, struct list* backList) 
             CLAY( CLAY_ID("SideBar"), {
                 .layout = {
                     .layoutDirection = CLAY_TOP_TO_BOTTOM,
-                    .sizing = { .width = CLAY_SIZING_FIXED(225), .height = CLAY_SIZING_GROW(0) },
+                    .sizing = { .width = CLAY_SIZING_PERCENT(.15), .height = CLAY_SIZING_GROW(0) },
                     .padding = CLAY_PADDING_ALL(10),
                     .childGap = 10
                 },
-                .backgroundColor = OLDGOLD
+                .backgroundColor = _LESSBLACK
             }){
                 renderSidebarButtons(data->info[TAGS], data->info[FINDDUPS]);
             }
@@ -127,7 +127,7 @@ struct dataToShow* mainFrontend(struct dataToShow* data, struct list* backList) 
                 .clip = { .vertical = true, .childOffset = Clay_GetScrollOffset() },
                 .layout = {
                     .layoutDirection = CLAY_TOP_TO_BOTTOM,
-                    .sizing = { CLAY_SIZING_GROW(0), CLAY_SIZING_GROW(0) },
+                    .sizing = { CLAY_SIZING_PERCENT(.85), CLAY_SIZING_GROW(0) },
                     .padding = CLAY_PADDING_ALL(10),
                     .childGap = 10,
                 },
@@ -182,8 +182,9 @@ struct dataToShow* mainFrontend(struct dataToShow* data, struct list* backList) 
     // Check if a user button was pushed
     if (data->dir && IsMouseButtonPressed(MOUSE_LEFT_BUTTON) && data->dir->directories){
         for (int i = 0; i < list_getNumElements(data->dir->directories); i++) {
-            struct clayDirectory* tempDir = list_getElement(data->dir->directories, i);
-            Clay_ElementId btnId = Clay__HashString(*tempDir->dirName, i);
+            struct directory* tempDir = list_getElement(data->dir->directories, i);
+            Clay_String dirName = buildClayString(tempDir->dirName);
+            Clay_ElementId btnId = Clay__HashString(dirName, i);
             if (Clay_PointerOver(btnId)) {
                 list_insert(backList, data->dir);
                 data->dir = tempDir;

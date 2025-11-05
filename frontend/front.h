@@ -10,22 +10,9 @@
 
 struct dataToShow {
     Font* fonts;
-    // struct directory* dir;
-    struct clayDirectory* dir;
+    struct directory* dir;
     int info[4];
     struct dynarray* duplicates;
-};
-
-struct clayDirectory {
-    Clay_String* dirPath;
-    Clay_String* dirName;
-    struct list* directories;
-    struct dynarray* songs;
-};
-
-struct claySong {
-    Clay_String* title;
-    Clay_String* artist;
 };
 
 /*-------------------------------------------------------------------------------------------------

@@ -28,7 +28,7 @@ void freeSongs(struct dynarray* songs){
         song = (struct song*)dynarray_get(songs, i);
         free(song->fileName);
         free(song->songName);
-        free(song->fileType);
+        // free(song->fileType);
         free(song->title);
         free(song->artist);
         free(song);
@@ -111,43 +111,45 @@ int isDirectory(struct dirent* entry){
     Song functions
 -------------------------------------------------------------------------------------------------*/
 
+//if the song has a .mp3 extension, returns where the extension starts, otherwise returns 0
+int hasMP3(char* string) {
+    char suffix[5] = ".mp3\0";
+    size_t stringLen = strlen(string);
+    size_t suffLen = strlen(suffix);
+    //position where the .mp3 would begin
+    int pos = (int)(stringLen - suffLen);
+
+    if (strncmp(string + pos, suffix, suffLen) == 0) {
+        return pos;
+    }
+    return 0;
+}
+
 struct song* createSong(struct dirent* entry, char* dirPath, int updateMD){
     struct song* song = (struct song*) calloc(1, sizeof(struct song));
+
     //set the file name
-    song->fileName = (char*) calloc(strlen(entry->d_name) + 1, sizeof(char));
-    strcpy(song->fileName, entry->d_name);
-    //get the songs name and null terminate it
-    size_t len;
-    const char* dot = strrchr(song->fileName, '.'); // find last dot
-    //stuff
-    if (dot && dot != song->fileName) {
-        //dot found
-        len = (size_t) (dot - song->fileName);
-        song->songName = (char*)calloc(len + 1, sizeof(char));
-        strncpy(song->songName, song->fileName, len);
-        song->songName[len] = '\0';
+    song->fileName = strdup(entry->d_name);
+
+    //set the song name
+    int MP3Pos = hasMP3(song->fileName);
+    if (MP3Pos) {
+        song->songName = strndup(song->fileName, (size_t)MP3Pos);
     } else {
-        //no extension found
         song->songName = strdup(song->fileName);
-        song->fileType = strdup("");
     }
 
-    //get the songs file extension
-    len = (strlen(song->fileName) - strlen(song->songName));
-    song->fileType = (char*) calloc(len, sizeof(char));
-    strcpy(song->fileType, dot + 1);
     //replace the '_' with ' '
     replaceChars(song->songName);
-    //add comments
+
+    //add comments and get title/artist metadata
     char* comment = NULL;
     if (updateMD == 1) {
         comment = dirPath;
     }
     getSongData(entry, song, comment);
-    if (song->title) {
-        replaceChars(song->title);
-    } else {
-        song->title = getSmallString();
+    if (!song->title){
+        song->title = strdup(song->songName);
     }
     if (!song->artist) {
         song->artist = getSmallString();
@@ -254,7 +256,7 @@ void printSongs(struct dynarray* songs, int numSpaces){
     for (i = 0; i < dynarray_size(songs); i++){
         printSpaces(numSpaces);
         song = (struct song*) dynarray_get(songs, i);
-        printf("TITLE: %s | TYPE: %s\n", song->songName, song->fileType);
+        printf("TITLE: %s |\n", song->songName);
     }
 }
 
