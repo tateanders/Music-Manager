@@ -1,6 +1,7 @@
 #include "front.h"
 
 int main() {
+
     struct dataToShow* data = calloc(1, sizeof(struct dataToShow));
     //initialize the frontend
     data->fonts = initFrontend();

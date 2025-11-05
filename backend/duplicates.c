@@ -70,15 +70,17 @@ void sortSong(struct song* song, char* dirPath, struct dynarray* dupArr) {
         hash = hashString(song->songName);
     }
     int pos = isHashIn(hash, dupArr);
-    if (pos == -1) {
-        //if the song is not a duplicate
-        struct duplicate* dup = createDuplicate(song->title, hash, dirPath);
-        dynarray_insert(dupArr, dup);
-    } else {
-        //if the song is a duplicate
-        struct duplicate* dup2 = dynarray_get(dupArr, pos);
-        dynarray_insert(dup2->locations, dirPath);
+    struct duplicate* dup;
+    if (pos != -1) {
+        dup = dynarray_get(dupArr, pos);
+        if (strcmp(song->title, dup->title) == 0) {
+            //if the song is a duplicate
+            dynarray_insert(dup->locations, dirPath);
+            return;
+        }
     }
+    dup = createDuplicate(song->title, hash, dirPath);
+    dynarray_insert(dupArr, dup);
 }
 
 void sortSongs(struct directory* directory, struct dynarray* dupArr) {

@@ -70,7 +70,7 @@ void renderDup(struct duplicate* dup, int pos) {
     CLAY(songId, {
         .layout = { 
             .sizing = { 
-                .width = CLAY_SIZING_GROW(0),
+                .width = CLAY_SIZING_PERCENT(1),
                 .height = CLAY_SIZING_GROW(0)
             },
             .padding = CLAY_PADDING_ALL(16),
@@ -293,7 +293,7 @@ void renderGreenButton() {
     CLAY( bId, {
         .layout = {
             .childAlignment = { CLAY_ALIGN_X_CENTER, CLAY_ALIGN_Y_CENTER },
-            .sizing = { CLAY_SIZING_GROW(0), CLAY_SIZING_FIXED(75) },
+            .sizing = { CLAY_SIZING_GROW(0), CLAY_SIZING_FIXED(60) },
         },
         .backgroundColor = GREENS,
         .cornerRadius = 8,
@@ -312,9 +312,9 @@ void renderSidebarButton(Clay_String text) {
     CLAY( bId, {
         .layout = {
             .childAlignment = { CLAY_ALIGN_X_CENTER, CLAY_ALIGN_Y_CENTER },
-            .sizing = { CLAY_SIZING_GROW(0), CLAY_SIZING_FIXED(75) },
+            .sizing = { CLAY_SIZING_GROW(0), CLAY_SIZING_FIXED(60) },
         },
-        .backgroundColor = BLUEGRAY,
+        .backgroundColor = GARNET,
         .cornerRadius = 8,
     }){
         CLAY_TEXT(text, CLAY_TEXT_CONFIG({

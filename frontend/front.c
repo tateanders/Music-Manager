@@ -2,9 +2,9 @@
 #include "front.h"
 #include "clay_renderer_raylib.c"
 #include "components.h"
-#include "resources/GOTHIC.c"
-#include "resources/NOTO.c"
-#include "resources/NOTOI.c"
+#include "GOTHIC.c"
+#include "NOTO.c"
+#include "NOTOI.c"
 
 /*-------------------------------------------------------------------------------------------------
     Error handler
@@ -95,7 +95,7 @@ struct dataToShow* mainFrontend(struct dataToShow* data, struct list* backList) 
         .layout = {
             .layoutDirection = CLAY_TOP_TO_BOTTOM,
             .sizing = { CLAY_SIZING_GROW(0), CLAY_SIZING_GROW(0) },
-            .childGap = 10
+            .childGap = 0
         },
         .backgroundColor = _BLACK
     }){
@@ -105,7 +105,7 @@ struct dataToShow* mainFrontend(struct dataToShow* data, struct list* backList) 
             .layout = {
                 .layoutDirection = CLAY_LEFT_TO_RIGHT,
                 .sizing = { CLAY_SIZING_PERCENT(1), CLAY_SIZING_GROW(0) },
-                .childGap = 10
+                .childGap = 0
             },
         }){
     
@@ -113,7 +113,7 @@ struct dataToShow* mainFrontend(struct dataToShow* data, struct list* backList) 
             CLAY( CLAY_ID("SideBar"), {
                 .layout = {
                     .layoutDirection = CLAY_TOP_TO_BOTTOM,
-                    .sizing = { .width = CLAY_SIZING_PERCENT(.15), .height = CLAY_SIZING_GROW(0) },
+                    .sizing = { .width = CLAY_SIZING_PERCENT(.20), .height = CLAY_SIZING_GROW(0) },
                     .padding = CLAY_PADDING_ALL(10),
                     .childGap = 10
                 },
@@ -127,11 +127,11 @@ struct dataToShow* mainFrontend(struct dataToShow* data, struct list* backList) 
                 .clip = { .vertical = true, .childOffset = Clay_GetScrollOffset() },
                 .layout = {
                     .layoutDirection = CLAY_TOP_TO_BOTTOM,
-                    .sizing = { CLAY_SIZING_PERCENT(.85), CLAY_SIZING_GROW(0) },
+                    .sizing = { CLAY_SIZING_PERCENT(.80), CLAY_SIZING_GROW(0) },
                     .padding = CLAY_PADDING_ALL(10),
                     .childGap = 10,
                 },
-                .backgroundColor = BLUEGRAY,
+                .backgroundColor = _BLACK,
             }){
                 if(data->info[TAGS] || data->info[FINDDUPS]) {
                     renderDirHeader2();
