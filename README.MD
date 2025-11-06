@@ -2,11 +2,11 @@
 
 Music Manager is a lightweight, interactive MP3 file manager with a GUI frontend built using **Raylib** and **Clay UI**.  
 
-It is designed to help DJs organize their music collection efficiently and prepare their files for **Serato** smart crates and **Rekordbox** intelligent playlists.  
+It is designed to help DJs organize their music collection and prepare libraries for **Serato** smart crates and **Rekordbox** intelligent playlists.  
 
 This has only been tested on an ARM mac but should in theory work on Linux as well (let me know).
 
-#### **Note: this program edits the metadata of ID3v2.3 and ID3v2.4 mp3 files and will overwrite any current comments in your mp3 files.**
+#### **Note: This program edits the metadata of ID3v2.3 and ID3v2.4 mp3 files and will overwrite any current comments in your mp3 files.**
 ---
 
 ## Features
@@ -29,10 +29,10 @@ This has only been tested on an ARM mac but should in theory work on Linux as we
 
 - **Issues**  
   - Could be more performant.
-  - Wierd bugs where strings act very wrong randomly.
   - Needs to use more const variables.
   - Would like to have getters and setters for all structs.
   - Want to move all button interaction into a function and have on hover interaction.
+  - Would like to update the ID3v2.3 and ID3v2.4 editing files to use C++ and polymorphism.
 
 ---
 
@@ -58,8 +58,11 @@ make
 3. Run:
 
 ```bash
-./lib
+./Music-Manager
 ```
+
+#### **Note: The Excecutable file can me placed on the desktop for more convenient access. 
+**The excecutable has no dependencies so the code can be deleted after compilation.**
 
 4. Decompile:
 

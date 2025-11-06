@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.15)
-project(lib C)
+project(Music-Manager C)
 
 set(CMAKE_C_STANDARD 99)
 
@@ -25,9 +25,6 @@ include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/backend
 )
 
-# Link Raylib and tell it where to find it (Homebrew default location)
-link_directories(/opt/homebrew/lib)
-
 # Define sources
 set(CLAY_SOURCES
     # main
@@ -52,10 +49,10 @@ set(CLAY_SOURCES
 )
 
 # Create the executable
-add_executable(lib ${CLAY_SOURCES})
+add_executable(Music-Manager ${CLAY_SOURCES})
 
 # Link Raylib and macOS frameworks
-target_link_libraries(lib
+target_link_libraries(Music-Manager
     raylib
     "-framework OpenGL"
     "-framework Cocoa"
@@ -65,7 +62,7 @@ target_link_libraries(lib
 )
 
 add_custom_command(
-    TARGET lib POST_BUILD
+    TARGET Music-Manager POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory
     ${CMAKE_CURRENT_SOURCE_DIR}/resources
     ${CMAKE_CURRENT_BINARY_DIR}/resources
