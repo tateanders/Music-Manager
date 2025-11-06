@@ -61,8 +61,7 @@ make
 ./Music-Manager
 ```
 
-#### **Note: The Excecutable file can me placed on the desktop for more convenient access. 
-**The excecutable has no dependencies so the code can be deleted after compilation.**
+#### **Note: The Excecutable file can me placed on the desktop for more convenient access. The excecutable has no dependencies so the code can be deleted after compilation.**
 
 4. Decompile:
 
