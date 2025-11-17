@@ -1,5 +1,7 @@
 # Music Manager
 
+![Frontend Photo](Photo.png)
+
 Music Manager is a lightweight, interactive MP3 file manager with a GUI frontend built using **Raylib** and **Clay UI**.  
 
 It is designed to help DJs organize their music collection and prepare libraries for **Serato** smart crates and **Rekordbox** intelligent playlists.  
